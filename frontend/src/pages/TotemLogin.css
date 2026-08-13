@@ -1,0 +1,128 @@
+.totem-fond {
+  min-height: 100vh;
+  background-color: #0d7377;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  user-select: none;
+}
+
+.totem-entete {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px 0;
+  position: relative;
+}
+
+.totem-logos {
+  position: absolute;
+  left: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.totem-logo-riva {
+  background: #b8a888;
+  color: #0d7377;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.totem-logo-sam {
+  background: white;
+  color: #333;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.totem-entete h1 {
+  color: white;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.totem-version {
+  position: absolute;
+  right: 24px;
+  color: white;
+  font-size: 0.8rem;
+}
+
+.totem-carte {
+  background: #06b6b0;
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 40px;
+  width: 340px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.totem-affichage-ligne {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.totem-affichage {
+  flex: 1;
+  font-size: 1.5rem;
+  text-align: center;
+  border: none;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.totem-bouton-reset {
+  background: #f4a259;
+  border: none;
+  border-radius: 4px;
+  padding: 0 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.totem-pave {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.totem-touche {
+  background: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 2rem;
+  padding: 20px 0;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.totem-touche:active {
+  transform: scale(0.95);
+  background: #e0e0e0;
+}
+
+.totem-bouton-valider {
+  width: 100%;
+  margin-top: 16px;
+  background: #f4a259;
+  border: none;
+  border-radius: 4px;
+  padding: 16px 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.totem-erreur {
+  color: #ffb3b3;
+  text-align: center;
+  margin-top: 12px;
+}
