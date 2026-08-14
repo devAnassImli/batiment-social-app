@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import logoRiva from '../assets/logo-riva.png';
+import logoSam from '../assets/logo-sam.png';
 import './Header.css';
 
 export default function Header({ utilisateur }) {
@@ -17,8 +19,8 @@ export default function Header({ utilisateur }) {
   return (
     <header className="app-header">
       <div className="app-header-logos">
-        <span className="logo-riva">RIVA</span>
-        <span className="logo-sam">SAM MONTEREAU</span>
+        <img src={logoRiva} alt="RIVA" className="logo-img" />
+        <img src={logoSam} alt="SAM Montereau" className="logo-img logo-sam-img" />
       </div>
       <div className="app-header-titre">
         <h1>BÂTIMENT SOCIAL</h1>

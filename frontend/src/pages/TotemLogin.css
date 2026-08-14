@@ -29,8 +29,9 @@
 
 .totem-affichage-ligne {
   display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
+  align-items: stretch;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .totem-affichage {
@@ -46,10 +47,11 @@
   background: #eee;
   border: 2px solid #dde3e3;
   border-radius: 6px;
-  padding: 0 16px;
+  padding: 0 20px;
   font-weight: 700;
   color: #555;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .totem-pave {
@@ -136,4 +138,27 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+}
+
+.totem-confirmation {
+  background: white;
+  border-radius: 14px;
+  padding: 40px 60px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.totem-confirmation-icone {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.totem-confirmation h2 {
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.totem-confirmation p {
+  color: #555;
 }
