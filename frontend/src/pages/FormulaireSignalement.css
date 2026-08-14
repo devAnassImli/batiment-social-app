@@ -164,3 +164,39 @@
   cursor: pointer;
   text-decoration: underline;
 }
+.signalement-liste-problemes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signalement-probleme {
+  background: #f7f8f8;
+  border: 2px solid #e2e6e6;
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.signalement-probleme:active {
+  transform: scale(0.98);
+  background: #0d7377;
+  color: white;
+}
+
+.signalement-probleme-autre {
+  border-style: dashed;
+  color: #666;
+}
+
+.signalement-autre-zone {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

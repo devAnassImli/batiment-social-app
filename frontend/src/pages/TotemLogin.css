@@ -35,23 +35,29 @@
 }
 
 .totem-affichage {
-  flex: 1;
+  width: 100%;
   font-size: 1.5rem;
   text-align: center;
   border: 2px solid #dde3e3;
-  border-radius: 6px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 20px;
+  letter-spacing: 4px;
 }
 
-.totem-bouton-reset {
-  background: #eee;
-  border: 2px solid #dde3e3;
-  border-radius: 6px;
-  padding: 0 20px;
-  font-weight: 700;
-  color: #555;
+.totem-bouton-effacer {
+  width: 100%;
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #8a8f8f;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 0;
   cursor: pointer;
-  white-space: nowrap;
+}
+.totem-bouton-effacer:active {
+  color: #c0392b;
 }
 
 .totem-pave {
@@ -161,4 +167,49 @@
 
 .totem-confirmation p {
   color: #555;
+}
+.carte-action-principale {
+  background: linear-gradient(135deg, #0d7377, #0a5c60);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  padding: 36px 42px;
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  cursor: pointer;
+  box-shadow: 0 14px 34px rgba(13,115,119,0.35);
+  transition: transform 0.15s ease;
+}
+
+.carte-action-principale:active {
+  transform: scale(0.98);
+}
+
+.carte-action-icone {
+  font-size: 2.6rem;
+}
+
+.carte-action-texte {
+  flex: 1;
+  text-align: left;
+}
+
+.carte-action-texte h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.4rem;
+}
+
+.carte-action-texte p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #cdeae8;
+  font-weight: 400;
+}
+
+.carte-action-fleche {
+  font-size: 1.6rem;
+  opacity: 0.8;
 }

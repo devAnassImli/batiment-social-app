@@ -91,28 +91,29 @@ export default function TotemLogin() {
     return (
       <div className="totem-page">
         <Header utilisateur={employe} />
-        <main className="totem-accueil">
-          <button className="totem-action-principale" onClick={() => setVue('signalement')}>
-            <span className="totem-action-icone">⚠️</span>
-            <span>Signaler un problème</span>
-          </button>
-          <button className="totem-action-secondaire" onClick={reset}>
-            Se déconnecter
-          </button>
-        </main>
+            <main className="totem-accueil">
+        <button className="carte-action-principale" onClick={() => setVue('signalement')}>
+          <div className="carte-action-icone">⚠️</div>
+          <div className="carte-action-texte">
+            <h2>Signaler un problème</h2>
+            <p>Décrivez-le en quelques secondes</p>
+          </div>
+          <div className="carte-action-fleche">→</div>
+        </button>
+        <button className="totem-action-secondaire" onClick={reset}>
+          Se déconnecter
+        </button>
+      </main>
       </div>
     );
   }
 
-  return (
+ return (
     <div className="totem-page">
       <Header utilisateur={null} />
       <main className="totem-connexion">
         <div className="totem-carte">
-          <div className="totem-affichage-ligne">
-            <input className="totem-affichage" value={matricule} readOnly placeholder="Matricule" />
-            <button className="totem-bouton-reset" onClick={reset}>EFFACER</button>
-          </div>
+          <input className="totem-affichage" value={matricule} readOnly placeholder="Matricule" />
           <div className="totem-pave">
             {TOUCHES.map((touche) => (
               <button key={touche} className="totem-touche" onClick={() => ajouterChiffre(touche)}>
@@ -122,6 +123,9 @@ export default function TotemLogin() {
           </div>
           <button className="totem-bouton-valider" onClick={valider} disabled={chargement}>
             {chargement ? 'Vérification...' : 'VALIDER'}
+          </button>
+          <button className="totem-bouton-effacer" onClick={reset}>
+            Effacer
           </button>
           {erreur && <p className="totem-erreur">{erreur}</p>}
         </div>
