@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
+import { verifierMatricule } from '../services/api';
 import './TotemLogin.css';
 
 const TOUCHES = ['7','8','9','4','5','6','1','2','3','0'];
-const LONGUEUR_MAX = 10; // correspond au nchar(10) de la procédure stockée
+const LONGUEUR_MAX = 5; // correspond au nchar(5) de la procédure stockée
 
 export default function TotemLogin() {
   const [matricule, setMatricule] = useState('');
   const [erreur, setErreur] = useState('');
+  const [chargement, setChargement] = useState(false);
+  const [employe, setEmploye] = useState(null);
 
   const ajouterChiffre = (chiffre) => {
     if (matricule.length < LONGUEUR_MAX) {
@@ -18,16 +21,29 @@ export default function TotemLogin() {
   const reset = () => {
     setMatricule('');
     setErreur('');
+    setEmploye(null);
   };
 
-  const valider = () => {
-    if (matricule.length === 0) return;
-    // Pour l'instant on affiche juste ce qui a été saisi.
-    // Étape suivante : appel API vers le backend (procédure stockée)
-    console.log('Matricule saisi :', matricule);
+  const valider = async () => {
+    if (matricule.length === 0 || chargement) return;
+    setChargement(true);
+    setErreur('');
+
+    try {
+      const { ok, donnees } = await verifierMatricule(matricule);
+      if (ok && donnees.trouve) {
+        setEmploye(donnees.employe);
+      } else {
+        setErreur('Matricule non reconnu');
+        setMatricule('');
+      }
+    } catch {
+      setErreur('Impossible de contacter le serveur');
+    } finally {
+      setChargement(false);
+    }
   };
 
-  // Écoute clavier globale : couvre le pavé tactile ET un futur lecteur badge
   useEffect(() => {
     const gererTouche = (e) => {
       if (e.key >= '0' && e.key <= '9') {
@@ -41,6 +57,30 @@ export default function TotemLogin() {
     window.addEventListener('keydown', gererTouche);
     return () => window.removeEventListener('keydown', gererTouche);
   });
+
+  // Écran affiché une fois le salarié reconnu
+  if (employe) {
+    return (
+      <div className="totem-fond">
+        <div className="totem-entete">
+          <div className="totem-logos">
+            <span className="totem-logo-riva">RIVA</span>
+            <span className="totem-logo-sam">SAM MONTEREAU</span>
+          </div>
+          <h1>BÂTIMENT SOCIAL</h1>
+          <span className="totem-version">v0.1</span>
+        </div>
+        <div className="totem-carte">
+          <p style={{ fontSize: '1.5rem', textAlign: 'center', margin: '20px 0' }}>
+            Bonjour {employe.Nome} {employe.Cognome} 👋
+          </p>
+          <button className="totem-bouton-valider" onClick={reset}>
+            Retour
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="totem-fond">
@@ -78,8 +118,8 @@ export default function TotemLogin() {
           ))}
         </div>
 
-        <button className="totem-bouton-valider" onClick={valider}>
-          VALIDER
+        <button className="totem-bouton-valider" onClick={valider} disabled={chargement}>
+          {chargement ? 'Vérification...' : 'VALIDER'}
         </button>
 
         {erreur && <p className="totem-erreur">{erreur}</p>}

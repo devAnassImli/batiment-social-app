@@ -35,7 +35,40 @@ app.get("/api/test-db", async (req, res) => {
     res.status(500).json({ erreur: err.message });
   }
 });
+// Vérifie un matricule via la procédure stockée SQL
+app.get("/api/employe/:matricule", async (req, res) => {
+  const matriculeBrut = req.params.matricule;
+  const matricule = matriculeBrut.padStart(5, "0").slice(0, 5);
 
+  console.log(
+    "Matricule brut recu :",
+    matriculeBrut,
+    "-> envoye a SQL :",
+    `"${matricule}"`,
+    "(longueur:",
+    matricule.length,
+    ")",
+  );
+
+  try {
+    const pool = await sql.connect(configEmployes);
+    const resultat = await pool
+      .request()
+      .input("Matricola", sql.NChar(5), matricule)
+      .execute(process.env.DB_EMPLOYEES_SP);
+
+    if (resultat.recordset.length === 0) {
+      return res
+        .status(404)
+        .json({ trouve: false, message: "Matricule inconnu" });
+    }
+
+    res.json({ trouve: true, employe: resultat.recordset[0] });
+  } catch (err) {
+    console.error("Erreur SQL :", err.message);
+    res.status(500).json({ erreur: err.message });
+  }
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Backend demarre sur http://localhost:${PORT}`);
