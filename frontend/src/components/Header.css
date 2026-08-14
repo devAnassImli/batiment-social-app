@@ -1,0 +1,76 @@
+.app-header {
+  width: 100%;
+  background: #0d7377;
+  border-bottom: 4px solid #b8a888;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  box-sizing: border-box;
+}
+
+.app-header-logos {
+  display: flex;
+  gap: 10px;
+  min-width: 220px;
+}
+
+.logo-riva {
+  background: #b8a888;
+  color: #0d7377;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.logo-sam {
+  background: white;
+  color: #1a1a1a;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 4px;
+}
+
+.app-header-titre {
+  text-align: center;
+  flex: 1;
+}
+
+.app-header-titre h1 {
+  color: white;
+  font-size: 1.7rem;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.app-header-soustitre {
+  color: #cdeae8;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.app-header-droite {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: white;
+  min-width: 220px;
+  font-size: 0.85rem;
+  gap: 2px;
+}
+
+.app-header-utilisateur {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.app-header-date {
+  text-transform: capitalize;
+  color: #cdeae8;
+}
+
+.app-header-heure {
+  font-variant-numeric: tabular-nums;
+  color: #cdeae8;
+}
