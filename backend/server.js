@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const sql = require("mssql");
+const ldap = require("ldapjs");
 const dbSqlite = require('./db-sqlite');
 const app = express();
 app.use(cors());
@@ -116,6 +117,107 @@ app.get('/api/signalements', (req, res) => {
   `).all();
   res.json(signalements);
 });
+
+// ══════════════════════════════════════════════════════════
+//  AUTHENTIFICATION LDAP (back-office) — Active Directory SAM Montereau
+// ══════════════════════════════════════════════════════════
+const LDAP_URL = 'ldap://mt.rivagroup.local';
+const LDAP_BASE_DN = 'DC=mt,DC=rivagroup,DC=local';
+
+function tryLdapBind(bindDN, password) {
+  return new Promise((resolve) => {
+    const client = ldap.createClient({
+      url: LDAP_URL,
+      timeout: 5000,
+      connectTimeout: 5000,
+    });
+
+    client.on('error', () => resolve(null));
+
+    client.bind(bindDN, password, (err) => {
+      if (err) {
+        console.log('LDAP bind echoue pour', bindDN, ':', err.message);
+        client.destroy();
+        resolve(null);
+        return;
+      }
+
+      const username = bindDN.includes('\\') ? bindDN.split('\\')[1] : bindDN.split('@')[0];
+      const searchOptions = {
+        filter: `(sAMAccountName=${username})`,
+        scope: 'sub',
+        attributes: ['cn', 'mail', 'sAMAccountName'],
+      };
+
+      client.search(LDAP_BASE_DN, searchOptions, (err, res) => {
+        if (err) {
+          client.destroy();
+          resolve(null);
+          return;
+        }
+
+        let userInfo = null;
+        res.on('searchEntry', (entry) => {
+          let cn = username, email = '';
+          if (entry.object) {
+            cn = entry.object.cn || entry.object.CN || username;
+            email = entry.object.mail || entry.object.Mail || '';
+          } else if (entry.attributes) {
+            entry.attributes.forEach((attr) => {
+              if ((attr.type || '').toLowerCase() === 'cn') cn = attr.values ? attr.values[0] : '';
+              if ((attr.type || '').toLowerCase() === 'mail') email = attr.values ? attr.values[0] : '';
+            });
+          }
+          userInfo = { nomComplet: cn, email, username };
+        });
+
+        res.on('end', () => {
+          client.destroy();
+          resolve(userInfo);
+        });
+
+        res.on('error', () => {
+          client.destroy();
+          resolve(null);
+        });
+      });
+    });
+  });
+}
+
+async function authentifierLdap(username, password) {
+  const formatsBindPossibles = [
+    `${username}@mt.rivagroup.local`,
+    `MT\\${username}`,
+    username,
+  ];
+
+  for (const bindDN of formatsBindPossibles) {
+    const resultat = await tryLdapBind(bindDN, password);
+    if (resultat) return resultat;
+  }
+  return null;
+}
+
+app.post('/api/admin/connexion', async (req, res) => {
+  const { identifiant, motDePasse } = req.body;
+
+  if (!identifiant || !motDePasse) {
+    return res.status(400).json({ succes: false, message: 'Identifiant et mot de passe requis' });
+  }
+
+  try {
+    const utilisateurLdap = await authentifierLdap(identifiant, motDePasse);
+    if (!utilisateurLdap) {
+      return res.status(401).json({ succes: false, message: 'Identifiants incorrects' });
+    }
+    res.json({ succes: true, utilisateur: utilisateurLdap });
+  } catch (err) {
+    console.error('Erreur LDAP :', err.message);
+    res.status(500).json({ succes: false, message: 'Erreur serveur' });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Backend demarre sur http://localhost:${PORT}`);

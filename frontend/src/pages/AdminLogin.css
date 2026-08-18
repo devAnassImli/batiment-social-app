@@ -1,0 +1,85 @@
+@import '../styles/design-tokens.css';
+.admin-login-page {
+  min-height: 100vh;
+  background: var(--couleur-fond);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--police);
+}
+
+.admin-login-carte {
+  background: var(--couleur-surface);
+  border-radius: var(--rayon-lg);
+  padding: 44px;
+  width: 380px;
+  box-shadow: var(--ombre-lg);
+  border-top: 4px solid var(--couleur-teal-700);
+}
+
+.admin-login-carte h1 {
+  color: var(--couleur-teal-800);
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.admin-login-soustitre {
+  text-align: center;
+  color: var(--couleur-texte-att);
+  font-size: 0.85rem;
+  margin-bottom: 28px;
+}
+
+.admin-login-carte label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--couleur-texte);
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+
+.admin-login-carte input {
+  width: 100%;
+  border: 2px solid var(--couleur-bordure);
+  border-radius: var(--rayon-sm);
+  padding: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.admin-login-carte input:focus {
+  border-color: var(--couleur-teal-600);
+  outline: none;
+}
+
+.admin-login-carte button {
+  width: 100%;
+  margin-top: 26px;
+  background: var(--couleur-teal-700);
+  color: white;
+  border: none;
+  border-radius: var(--rayon-sm);
+  padding: 14px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-login-carte button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-login-erreur {
+  color: var(--couleur-urgence);
+  background: var(--couleur-urgence-fond);
+  padding: 10px;
+  border-radius: var(--rayon-sm);
+  margin-top: 14px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}

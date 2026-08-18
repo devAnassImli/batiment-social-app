@@ -16,6 +16,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "ldapjs": "^3.0.7",
     "mssql": "^12.7.0"
   },
   "devDependencies": {
