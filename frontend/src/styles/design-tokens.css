@@ -1,0 +1,40 @@
+:root {
+  /* Couleurs de marque */
+  --couleur-teal-900: #063638;
+  --couleur-teal-800: #0a4e51;
+  --couleur-teal-700: #0d7377;
+  --couleur-teal-600: #0f8b8f;
+  --couleur-teal-100: #e3f2f2;
+  --couleur-or: #b8a888;
+  --couleur-or-clair: #d9cca8;
+
+  /* Neutres */
+  --couleur-fond: #eef1f1;
+  --couleur-surface: #ffffff;
+  --couleur-bordure: #dde3e3;
+  --couleur-texte: #14201f;
+  --couleur-texte-att: #5b6767;
+  --couleur-texte-inv: #ffffff;
+
+  /* États */
+  --couleur-succes: #1e8e5a;
+  --couleur-urgence: #c0392b;
+  --couleur-urgence-fond: #fdecea;
+
+  /* Élévation */
+  --ombre-sm: 0 2px 6px rgba(6, 54, 56, 0.08);
+  --ombre-md: 0 10px 28px rgba(6, 54, 56, 0.14);
+  --ombre-lg: 0 20px 48px rgba(6, 54, 56, 0.20);
+
+  /* Rayons */
+  --rayon-sm: 8px;
+  --rayon-md: 14px;
+  --rayon-lg: 20px;
+
+  /* Typo */
+  --police: 'Inter', 'Segoe UI', Arial, sans-serif;
+
+  /* Rythme */
+  --transition-rapide: 0.15s ease;
+  --transition-normale: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '../components/Header';
 import './FormulaireSignalement.css';
+import { envoyerSignalement } from '../services/api';
 
 const ZONES = ['Infirmerie', 'Casiers', 'Douches', 'Poste de garde', 'Bascule CSE'];
 const CATEGORIES = ['Plomberie', 'Électricité', 'Serrurerie', 'Propreté', 'Autre'];
@@ -43,10 +44,25 @@ export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) 
 
   const envoyer = async () => {
     setEnvoiEnCours(true);
-    setTimeout(() => {
+    try {
+      const { ok, resultat } = await envoyerSignalement({
+        matricule: employe.Matricola?.trim(),
+        nomDemandeur: `${employe.Nome} ${employe.Cognome}`,
+        zone,
+        categorie,
+        urgence,
+        description,
+      });
+      if (ok && resultat.succes) {
+        onEnvoye({ zone, categorie, urgence, description, id: resultat.idSignalement });
+      } else {
+        alert("Erreur lors de l'envoi, réessayez.");
+      }
+    } catch {
+      alert('Impossible de contacter le serveur.');
+    } finally {
       setEnvoiEnCours(false);
-      onEnvoye({ zone, categorie, urgence, description });
-    }, 600);
+    }
   };
 
   const variantes = {

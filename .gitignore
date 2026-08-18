@@ -8,6 +8,7 @@ frontend/dist/
 **/.env
 **/.env.local
 
+
 # Logs
 *.log
 
@@ -16,3 +17,5 @@ frontend/dist/
 !.vscode/extensions.json
 .idea
 .DS_Store
+# Bases de données locales (ne jamais commit)
+backend/*.db

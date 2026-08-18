@@ -4,43 +4,46 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 22px;
   padding: 20px;
 }
 
 .signalement-carte {
-  background: white;
-  border-radius: 14px;
-  padding: 32px;
+  background: var(--couleur-surface);
+  border-radius: var(--rayon-lg);
+  padding: 38px;
   width: 100%;
-  max-width: 560px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  border: 1px solid #e2e6e6;
+  max-width: 580px;
+  box-shadow: var(--ombre-lg);
+  border: 1px solid var(--couleur-bordure);
+  min-height: 420px;
 }
 
 .signalement-progression {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .signalement-point {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #dde3e3;
+  width: 30px;
+  height: 5px;
+  border-radius: 4px;
+  background: var(--couleur-bordure);
+  transition: background var(--transition-normale);
 }
 
 .signalement-point.actif {
-  background: #0d7377;
+  background: var(--couleur-teal-700);
 }
 
 .signalement-carte h2 {
   text-align: center;
-  color: #1a1a1a;
-  font-size: 1.4rem;
-  margin-bottom: 24px;
+  color: var(--couleur-texte);
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin-bottom: 26px;
 }
 
 .signalement-grille {
@@ -54,15 +57,21 @@
 }
 
 .signalement-choix {
-  background: #f7f8f8;
-  border: 2px solid #e2e6e6;
-  border-radius: 10px;
-  padding: 26px 12px;
+  background: #f7f9f9;
+  border: 2px solid var(--couleur-bordure);
+  border-radius: var(--rayon-md);
+  padding: 28px 14px;
   font-size: 1.1rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-weight: 700;
+  color: var(--couleur-texte);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--transition-rapide);
+}
+
+.signalement-choix:hover {
+  border-color: var(--couleur-teal-600);
+  transform: translateY(-2px);
+  box-shadow: var(--ombre-sm);
 }
 
 .signalement-choix:active {
@@ -70,9 +79,9 @@
 }
 
 .signalement-choix.selectionne {
-  background: #0d7377;
+  background: var(--couleur-teal-700);
   color: white;
-  border-color: #0d7377;
+  border-color: var(--couleur-teal-700);
 }
 
 .signalement-normal {
@@ -81,122 +90,162 @@
 
 .signalement-urgent {
   border-color: #f3c9c0;
-  color: #c0392b;
+  color: var(--couleur-urgence);
 }
 
 .signalement-urgent.selectionne {
-  background: #c0392b;
-  border-color: #c0392b;
+  background: var(--couleur-urgence);
+  border-color: var(--couleur-urgence);
   color: white;
 }
 
+.signalement-liste-problemes {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.signalement-probleme {
+  background: #f7f9f9;
+  border: 2px solid var(--couleur-bordure);
+  border-radius: var(--rayon-sm);
+  padding: 17px 22px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--couleur-texte);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-rapide);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signalement-probleme::after {
+  content: '→';
+  opacity: 0;
+  transition: opacity var(--transition-rapide);
+}
+
+.signalement-probleme:hover::after {
+  opacity: 0.6;
+}
+
+.signalement-probleme:hover {
+  border-color: var(--couleur-teal-600);
+}
+
+.signalement-probleme:active {
+  transform: scale(0.98);
+  background: var(--couleur-teal-700);
+  color: white;
+}
+
+.signalement-probleme-autre {
+  border-style: dashed;
+  color: var(--couleur-texte-att);
+}
+
+.signalement-autre-zone {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .signalement-retour {
-  margin-top: 20px;
+  margin-top: 22px;
   background: none;
   border: none;
-  color: #666;
+  color: var(--couleur-texte-att);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.98rem;
   cursor: pointer;
   padding: 8px;
+  transition: color var(--transition-rapide);
+}
+
+.signalement-retour:hover {
+  color: var(--couleur-teal-700);
 }
 
 .signalement-recap {
   display: flex;
   gap: 8px;
   justify-content: center;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
 .signalement-tag {
-  background: #eef4f4;
-  color: #0d7377;
-  padding: 6px 14px;
+  background: var(--couleur-teal-100);
+  color: var(--couleur-teal-800);
+  padding: 7px 16px;
   border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 700;
+  font-size: 0.88rem;
 }
 
 .tag-urgent {
-  background: #fbeae7;
-  color: #c0392b;
+  background: var(--couleur-urgence-fond);
+  color: var(--couleur-urgence);
 }
 
 .signalement-description {
   width: 100%;
-  border: 2px solid #dde3e3;
-  border-radius: 10px;
-  padding: 14px;
-  font-size: 1.1rem;
+  border: 2px solid var(--couleur-bordure);
+  border-radius: var(--rayon-sm);
+  padding: 16px;
+  font-size: 1.08rem;
   font-family: inherit;
   resize: none;
+  transition: border-color var(--transition-rapide);
+}
+
+.signalement-description:focus {
+  border-color: var(--couleur-teal-600);
 }
 
 .signalement-boutons-finaux {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .signalement-envoyer {
-  background: #0d7377;
+  background: linear-gradient(135deg, var(--couleur-teal-600), var(--couleur-teal-800));
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 16px 28px;
+  border-radius: var(--rayon-sm);
+  padding: 17px 30px;
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
+  box-shadow: var(--ombre-sm);
+  transition: all var(--transition-rapide);
+}
+
+.signalement-envoyer:hover:not(:disabled) {
+  box-shadow: var(--ombre-md);
 }
 
 .signalement-envoyer:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .signalement-annuler-global {
   background: none;
   border: none;
-  color: #999;
+  color: var(--couleur-texte-att);
   font-size: 0.95rem;
   cursor: pointer;
   text-decoration: underline;
-}
-.signalement-liste-problemes {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  transition: color var(--transition-rapide);
 }
 
-.signalement-probleme {
-  background: #f7f8f8;
-  border: 2px solid #e2e6e6;
-  border-radius: 10px;
-  padding: 16px 20px;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.signalement-probleme:active {
-  transform: scale(0.98);
-  background: #0d7377;
-  color: white;
-}
-
-.signalement-probleme-autre {
-  border-style: dashed;
-  color: #666;
-}
-
-.signalement-autre-zone {
-  margin-top: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.signalement-annuler-global:hover {
+  color: var(--couleur-urgence);
 }
