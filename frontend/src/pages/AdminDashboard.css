@@ -1,0 +1,104 @@
+@import '../styles/design-tokens.css';
+
+.admin-dashboard {
+  min-height: 100vh;
+  background: var(--couleur-fond);
+  font-family: var(--police);
+}
+
+.admin-header {
+  background: var(--couleur-teal-800);
+  color: white;
+  padding: 18px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-header h1 {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.admin-header-droite {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.9rem;
+}
+
+.admin-header-droite button {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: var(--rayon-sm);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-main {
+  padding: 28px 32px;
+}
+
+.admin-filtres {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-filtres select {
+  padding: 10px 14px;
+  border: 2px solid var(--couleur-bordure);
+  border-radius: var(--rayon-sm);
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.admin-compteur {
+  color: var(--couleur-texte-att);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: var(--rayon-md);
+  overflow: hidden;
+  box-shadow: var(--ombre-sm);
+}
+
+.admin-table th {
+  background: var(--couleur-teal-100);
+  color: var(--couleur-teal-800);
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table td {
+  padding: 14px 16px;
+  border-top: 1px solid var(--couleur-bordure);
+  font-size: 0.92rem;
+}
+
+.admin-description-cell {
+  max-width: 260px;
+}
+
+.admin-badge-statut {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.admin-badge-urgent {
+  color: var(--couleur-urgence);
+  font-weight: 700;
+}

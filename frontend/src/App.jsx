@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import TotemLogin from './pages/TotemLogin';
 import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import RouteProtegee from './components/RouteProtegee';
 
 function App() {
   return (
@@ -8,7 +10,14 @@ function App() {
       <Routes>
         <Route path="/" element={<TotemLogin />} />
         <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<div style={{padding: 40}}>Dashboard admin - à construire</div>} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <RouteProtegee>
+              <AdminDashboard />
+            </RouteProtegee>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

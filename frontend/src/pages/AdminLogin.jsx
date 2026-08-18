@@ -20,8 +20,9 @@ export default function AdminLogin() {
         body: JSON.stringify({ identifiant, motDePasse }),
       });
       const resultat = await reponse.json();
-      if (resultat.succes) {
-        sessionStorage.setItem('admin_identifiant', resultat.identifiant);
+            if (resultat.succes) {
+        sessionStorage.setItem('admin_token', resultat.token);
+        sessionStorage.setItem('admin_utilisateur', JSON.stringify(resultat.utilisateur));
         navigate('/admin/dashboard');
       } else {
         setErreur(resultat.message || 'Connexion refusée');
