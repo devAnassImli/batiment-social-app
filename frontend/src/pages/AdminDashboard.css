@@ -1,10 +1,6 @@
 @import '../styles/design-tokens.css';
 
-.admin-dashboard {
-  min-height: 100vh;
-  background: var(--couleur-fond);
-  font-family: var(--police);
-}
+.admin-dashboard { min-height: 100vh; background: var(--couleur-fond); font-family: var(--police); }
 
 .admin-header {
   background: var(--couleur-teal-800);
@@ -15,17 +11,9 @@
   align-items: center;
 }
 
-.admin-header h1 {
-  font-size: 1.2rem;
-  font-weight: 800;
-}
+.admin-header h1 { font-size: 1.2rem; font-weight: 800; }
 
-.admin-header-droite {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-size: 0.9rem;
-}
+.admin-header-droite { display: flex; align-items: center; gap: 16px; font-size: 0.9rem; }
 
 .admin-header-droite button {
   background: rgba(255,255,255,0.15);
@@ -37,16 +25,9 @@
   font-weight: 600;
 }
 
-.admin-main {
-  padding: 28px 32px;
-}
+.admin-main { padding: 28px 32px; }
 
-.admin-filtres {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  margin-bottom: 20px;
-}
+.admin-filtres { display: flex; gap: 14px; align-items: center; margin-bottom: 20px; }
 
 .admin-filtres select {
   padding: 10px 14px;
@@ -56,11 +37,7 @@
   font-weight: 600;
 }
 
-.admin-compteur {
-  color: var(--couleur-texte-att);
-  font-weight: 600;
-  margin-left: auto;
-}
+.admin-compteur { color: var(--couleur-texte-att); font-weight: 600; margin-left: auto; }
 
 .admin-table {
   width: 100%;
@@ -81,24 +58,10 @@
   letter-spacing: 0.5px;
 }
 
-.admin-table td {
-  padding: 14px 16px;
-  border-top: 1px solid var(--couleur-bordure);
-  font-size: 0.92rem;
-}
+.admin-table td { padding: 14px 16px; border-top: 1px solid var(--couleur-bordure); font-size: 0.92rem; }
 
-.admin-description-cell {
-  max-width: 260px;
-}
+.admin-description-cell { max-width: 260px; }
 
-.admin-badge-statut {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 0.8rem;
-}
+.admin-badge-statut { padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
 
-.admin-badge-urgent {
-  color: var(--couleur-urgence);
-  font-weight: 700;
-}
+.admin-badge-urgent { color: var(--couleur-urgence); font-weight: 700; }

@@ -1,7 +1,7 @@
-const Database = require("better-sqlite3");
-const path = require("path");
+const Database = require('better-sqlite3');
+const path = require('path');
 
-const db = new Database(path.join(__dirname, "batiment-social.db"));
+const db = new Database(path.join(__dirname, 'batiment-social.db'));
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS T_BS_ZONES (
@@ -56,32 +56,27 @@ db.exec(`
   );
 `);
 
-const zoneExiste = db.prepare("SELECT COUNT(*) AS n FROM T_BS_ZONES").get();
+const zoneExiste = db.prepare('SELECT COUNT(*) AS n FROM T_BS_ZONES').get();
 if (zoneExiste.n === 0) {
-  const insererZone = db.prepare("INSERT INTO T_BS_ZONES (Nom) VALUES (?)");
-  ["Infirmerie", "Casiers", "Douches", "Poste de garde", "Bascule CSE"].forEach(
-    (z) => insererZone.run(z),
-  );
+  const insererZone = db.prepare('INSERT INTO T_BS_ZONES (Nom) VALUES (?)');
+  ['Infirmerie', 'Casiers', 'Douches', 'Poste de garde', 'Bascule CSE'].forEach(z => insererZone.run(z));
 
-  const insererCategorie = db.prepare(
-    "INSERT INTO T_BS_CATEGORIES (Nom) VALUES (?)",
-  );
-  ["Plomberie", "Électricité", "Serrurerie", "Propreté", "Autre"].forEach((c) =>
-    insererCategorie.run(c),
-  );
+  const insererCategorie = db.prepare('INSERT INTO T_BS_CATEGORIES (Nom) VALUES (?)');
+  ['Plomberie', 'Électricité', 'Serrurerie', 'Propreté', 'Autre'].forEach(c => insererCategorie.run(c));
 
-  const insererAvancement = db.prepare(
-    "INSERT INTO T_BS_AVANCEMENT (Nom, Position) VALUES (?, ?)",
-  );
+  const insererAvancement = db.prepare('INSERT INTO T_BS_AVANCEMENT (Nom, Position) VALUES (?, ?)');
   [
-    ["En attente de validation", 1],
-    ["Validé - à traiter", 2],
-    ["Pris en charge", 3],
-    ["Travail en cours", 4],
-    ["Terminé", 5],
+    ['En attente de validation', 1],
+    ['Validé - à traiter', 2],
+    ['Pris en charge', 3],
+    ['Travail en cours', 4],
+    ['Terminé', 5],
   ].forEach(([nom, pos]) => insererAvancement.run(nom, pos));
 
-  console.log("Base SQLite initialisee avec les donnees de reference.");
+  const insererPilote = db.prepare('INSERT INTO T_BS_PILOTES (NomComplet, Type) VALUES (?, ?)');
+  [['Manlio COPPOLA', 'INT'], ['Daniel CARDOSO', 'INT'], ['Entreprise BOPLAN', 'EXT']].forEach(([nom, type]) => insererPilote.run(nom, type));
+
+  console.log('Base SQLite initialisee avec les donnees de reference.');
 }
 
 module.exports = db;

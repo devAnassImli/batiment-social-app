@@ -19,14 +19,12 @@ export default function AdminDashboard() {
 
   const utilisateur = JSON.parse(sessionStorage.getItem('admin_utilisateur') || '{}');
 
-  useEffect(() => {
-    chargerSignalements();
-  }, []);
+  useEffect(() => { chargerSignalements(); }, []);
 
   const chargerSignalements = async () => {
     setChargement(true);
     const donnees = await recupererSignalements();
-    setSignalements(donnees);
+    setSignalements(donnees || []);
     setChargement(false);
   };
 
@@ -77,35 +75,28 @@ export default function AdminDashboard() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>N°</th>
-                <th>Date</th>
-                <th>Demandeur</th>
-                <th>Zone</th>
-                <th>Catégorie</th>
-                <th>Urgence</th>
-                <th>Description</th>
-                <th>Statut</th>
+                <th>N°</th><th>Date</th><th>Demandeur</th><th>Zone</th>
+                <th>Catégorie</th><th>Urgence</th><th>Description</th><th>Statut</th>
               </tr>
             </thead>
             <tbody>
               {signalementsFiltres.map((s) => {
                 const statutInfo = COULEURS_STATUT[s.Statut] || COULEURS_STATUT.A_VALIDER;
                 return (
-                  <tr key={s.IdSignalement}>
+                  <tr
+                    key={s.IdSignalement}
+                    onClick={() => navigate(`/admin/signalement/${s.IdSignalement}`)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <td>#{s.IdSignalement}</td>
                     <td>{new Date(s.DateCreation).toLocaleDateString('fr-FR')}</td>
                     <td>{s.NomDemandeur}</td>
                     <td>{s.ZoneNom}</td>
                     <td>{s.CategorieNom}</td>
-                    <td>
-                      {s.Urgence === 'Urgent' ? <span className="admin-badge-urgent">⚠ Urgent</span> : 'Normal'}
-                    </td>
+                    <td>{s.Urgence === 'Urgent' ? <span className="admin-badge-urgent">⚠ Urgent</span> : 'Normal'}</td>
                     <td className="admin-description-cell">{s.Description}</td>
                     <td>
-                      <span
-                        className="admin-badge-statut"
-                        style={{ color: statutInfo.couleur, background: statutInfo.fond }}
-                      >
+                      <span className="admin-badge-statut" style={{ color: statutInfo.couleur, background: statutInfo.fond }}>
                         {statutInfo.label}
                       </span>
                     </td>

@@ -31,16 +31,12 @@
   height: 5px;
   border-radius: 4px;
   background: var(--couleur-bordure);
-  transition: background var(--transition-normale);
 }
 
-.signalement-point.actif {
-  background: var(--couleur-teal-700);
-}
+.signalement-point.actif { background: var(--couleur-teal-700); }
 
 .signalement-carte h2 {
   text-align: center;
-  color: var(--couleur-texte);
   font-size: 1.45rem;
   font-weight: 800;
   margin-bottom: 26px;
@@ -52,13 +48,13 @@
   gap: 14px;
 }
 
-.signalement-grille-urgence {
-  grid-template-columns: 1fr 1fr;
-}
+.signalement-grille-urgence { grid-template-columns: 1fr 1fr; }
 
 .signalement-choix {
+  position: relative;
   background: #f7f9f9;
   border: 2px solid var(--couleur-bordure);
+  border-top: 4px solid var(--couleur-categorie, var(--couleur-bordure));
   border-radius: var(--rayon-md);
   padding: 28px 14px;
   font-size: 1.1rem;
@@ -68,42 +64,25 @@
   transition: all var(--transition-rapide);
 }
 
-.signalement-choix:hover {
-  border-color: var(--couleur-teal-600);
-  transform: translateY(-2px);
-  box-shadow: var(--ombre-sm);
-}
+.signalement-choix:hover { border-color: var(--couleur-teal-600); transform: translateY(-2px); }
 
-.signalement-choix:active {
-  transform: scale(0.97);
-}
+.signalement-choix:active { transform: scale(0.97); }
 
 .signalement-choix.selectionne {
-  background: var(--couleur-teal-700);
+  background: var(--couleur-categorie, var(--couleur-teal-700));
   color: white;
-  border-color: var(--couleur-teal-700);
+  border-color: var(--couleur-categorie, var(--couleur-teal-700));
 }
 
-.signalement-normal {
-  border-color: #cde3d8;
-}
+.signalement-choix-icone { display: block; font-size: 1.6rem; margin-bottom: 8px; }
 
-.signalement-urgent {
-  border-color: #f3c9c0;
-  color: var(--couleur-urgence);
-}
+.signalement-normal { border-color: #cde3d8; }
 
-.signalement-urgent.selectionne {
-  background: var(--couleur-urgence);
-  border-color: var(--couleur-urgence);
-  color: white;
-}
+.signalement-urgent { border-color: #f3c9c0; color: var(--couleur-urgence); }
 
-.signalement-liste-problemes {
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-}
+.signalement-urgent.selectionne { background: var(--couleur-urgence); border-color: var(--couleur-urgence); color: white; }
+
+.signalement-liste-problemes { display: flex; flex-direction: column; gap: 11px; }
 
 .signalement-probleme {
   background: #f7f9f9;
@@ -112,46 +91,18 @@
   padding: 17px 22px;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--couleur-texte);
   text-align: left;
   cursor: pointer;
   transition: all var(--transition-rapide);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
-.signalement-probleme::after {
-  content: '→';
-  opacity: 0;
-  transition: opacity var(--transition-rapide);
-}
+.signalement-probleme:hover { border-color: var(--couleur-teal-600); }
 
-.signalement-probleme:hover::after {
-  opacity: 0.6;
-}
+.signalement-probleme:active { transform: scale(0.98); background: var(--couleur-teal-700); color: white; }
 
-.signalement-probleme:hover {
-  border-color: var(--couleur-teal-600);
-}
+.signalement-probleme-autre { border-style: dashed; color: var(--couleur-texte-att); }
 
-.signalement-probleme:active {
-  transform: scale(0.98);
-  background: var(--couleur-teal-700);
-  color: white;
-}
-
-.signalement-probleme-autre {
-  border-style: dashed;
-  color: var(--couleur-texte-att);
-}
-
-.signalement-autre-zone {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+.signalement-autre-zone { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
 
 .signalement-retour {
   margin-top: 22px;
@@ -162,20 +113,11 @@
   font-size: 0.98rem;
   cursor: pointer;
   padding: 8px;
-  transition: color var(--transition-rapide);
 }
 
-.signalement-retour:hover {
-  color: var(--couleur-teal-700);
-}
+.signalement-retour:hover { color: var(--couleur-teal-700); }
 
-.signalement-recap {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
+.signalement-recap { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
 
 .signalement-tag {
   background: var(--couleur-teal-100);
@@ -186,10 +128,7 @@
   font-size: 0.88rem;
 }
 
-.tag-urgent {
-  background: var(--couleur-urgence-fond);
-  color: var(--couleur-urgence);
-}
+.tag-urgent { background: var(--couleur-urgence-fond); color: var(--couleur-urgence); }
 
 .signalement-description {
   width: 100%;
@@ -199,12 +138,9 @@
   font-size: 1.08rem;
   font-family: inherit;
   resize: none;
-  transition: border-color var(--transition-rapide);
 }
 
-.signalement-description:focus {
-  border-color: var(--couleur-teal-600);
-}
+.signalement-description:focus { border-color: var(--couleur-teal-600); }
 
 .signalement-boutons-finaux {
   display: flex;
@@ -223,18 +159,9 @@
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--ombre-sm);
-  transition: all var(--transition-rapide);
 }
 
-.signalement-envoyer:hover:not(:disabled) {
-  box-shadow: var(--ombre-md);
-}
-
-.signalement-envoyer:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
+.signalement-envoyer:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
 .signalement-annuler-global {
   background: none;
@@ -243,9 +170,6 @@
   font-size: 0.95rem;
   cursor: pointer;
   text-decoration: underline;
-  transition: color var(--transition-rapide);
 }
 
-.signalement-annuler-global:hover {
-  color: var(--couleur-urgence);
-}
+.signalement-annuler-global:hover { color: var(--couleur-urgence); }

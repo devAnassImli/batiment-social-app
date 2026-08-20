@@ -3,7 +3,7 @@ import logoRiva from '../assets/logo-riva.png';
 import logoSam from '../assets/logo-sam.png';
 import './Header.css';
 
-export default function Header({ utilisateur }) {
+export default function Header({ utilisateur, onDeconnexion }) {
   const [heure, setHeure] = useState(new Date());
 
   useEffect(() => {
@@ -18,22 +18,31 @@ export default function Header({ utilisateur }) {
 
   return (
     <header className="app-header">
-      <div className="app-header-logos">
-        <img src={logoRiva} alt="RIVA" className="logo-img" />
-        <img src={logoSam} alt="SAM Montereau" className="logo-img logo-sam-img" />
-      </div>
-      <div className="app-header-titre">
-        <h1>BÂTIMENT SOCIAL</h1>
-        <span className="app-header-soustitre">Signalement des problèmes</span>
-      </div>
-      <div className="app-header-droite">
-        {utilisateur && (
-          <span className="app-header-utilisateur">
-            {utilisateur.Nome} {utilisateur.Cognome}
-          </span>
-        )}
+      <div className="app-header-gauche">
         <span className="app-header-date">{dateFormatee}</span>
         <span className="app-header-heure">{heureFormatee}</span>
+      </div>
+
+      <div className="app-header-centre">
+        <img src={logoRiva} alt="RIVA" className="logo-img" />
+        <img src={logoSam} alt="SAM Montereau" className="logo-img logo-sam-img" />
+        <div className="app-header-titre">
+          <h1>BÂTIMENT SOCIAL</h1>
+          <span className="app-header-soustitre">Signalement des problèmes</span>
+        </div>
+      </div>
+
+      <div className="app-header-droite">
+        {utilisateur && (
+          <>
+            <span className="app-header-utilisateur">
+              {utilisateur.Nome} {utilisateur.Cognome}
+            </span>
+            <button className="app-header-deconnexion" onClick={onDeconnexion}>
+              Déconnexion
+            </button>
+          </>
+        )}
       </div>
     </header>
   );

@@ -20,7 +20,7 @@ export default function AdminLogin() {
         body: JSON.stringify({ identifiant, motDePasse }),
       });
       const resultat = await reponse.json();
-            if (resultat.succes) {
+      if (resultat.succes) {
         sessionStorage.setItem('admin_token', resultat.token);
         sessionStorage.setItem('admin_utilisateur', JSON.stringify(resultat.utilisateur));
         navigate('/admin/dashboard');
@@ -42,20 +42,10 @@ export default function AdminLogin() {
 
         <form onSubmit={seConnecter}>
           <label>Identifiant</label>
-          <input
-            type="text"
-            placeholder="prenom.nom"
-            value={identifiant}
-            onChange={(e) => setIdentifiant(e.target.value)}
-            autoFocus
-          />
+          <input type="text" placeholder="prenom.nom" value={identifiant} onChange={(e) => setIdentifiant(e.target.value)} autoFocus />
 
           <label>Mot de passe</label>
-          <input
-            type="password"
-            value={motDePasse}
-            onChange={(e) => setMotDePasse(e.target.value)}
-          />
+          <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} />
 
           <button type="submit" disabled={chargement}>
             {chargement ? 'Connexion...' : 'Se connecter'}
