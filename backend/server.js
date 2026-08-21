@@ -566,67 +566,171 @@ app.get("/api/reference/pilotes", verifierToken, (req, res) => {
     dbSqlite.prepare("SELECT * FROM T_BS_PILOTES WHERE Actif = 1").all(),
   );
 });
+
+app.get("/api/admin/statistiques", verifierToken, (req, res) => {
+  const total = dbSqlite
+    .prepare("SELECT COUNT(*) AS n FROM T_BS_SIGNALEMENTS WHERE Supprime = 0")
+    .get().n;
+
+  const parStatut = dbSqlite
+    .prepare(
+      `
+    SELECT Statut, COUNT(*) AS n FROM T_BS_SIGNALEMENTS WHERE Supprime = 0 GROUP BY Statut
+  `,
+    )
+    .all();
+
+  const parZone = dbSqlite
+    .prepare(
+      `
+    SELECT z.Nom AS zone, COUNT(*) AS n
+    FROM T_BS_SIGNALEMENTS s
+    JOIN T_BS_ZONES z ON z.IdZone = s.IdZone
+    WHERE s.Supprime = 0
+    GROUP BY z.Nom ORDER BY n DESC
+  `,
+    )
+    .all();
+
+  const parCategorie = dbSqlite
+    .prepare(
+      `
+    SELECT c.Nom AS categorie, COUNT(*) AS n
+    FROM T_BS_SIGNALEMENTS s
+    JOIN T_BS_CATEGORIES c ON c.IdCategorie = s.IdCategorie
+    WHERE s.Supprime = 0
+    GROUP BY c.Nom ORDER BY n DESC
+  `,
+    )
+    .all();
+
+  const urgents = dbSqlite
+    .prepare(
+      `
+    SELECT COUNT(*) AS n FROM T_BS_SIGNALEMENTS WHERE Supprime = 0 AND Urgence = 'Urgent'
+  `,
+    )
+    .get().n;
+
+  const enAttente = dbSqlite
+    .prepare(
+      `
+    SELECT COUNT(*) AS n FROM T_BS_SIGNALEMENTS WHERE Supprime = 0 AND Statut = 'A_VALIDER'
+  `,
+    )
+    .get().n;
+
+  const dernieres = dbSqlite
+    .prepare(
+      `
+    SELECT s.IdSignalement, s.DateCreation, s.NomDemandeur, z.Nom AS ZoneNom, s.Statut
+    FROM T_BS_SIGNALEMENTS s
+    LEFT JOIN T_BS_ZONES z ON z.IdZone = s.IdZone
+    WHERE s.Supprime = 0
+    ORDER BY s.IdSignalement DESC
+    LIMIT 5
+  `,
+    )
+    .all();
+
+  res.json({
+    total,
+    urgents,
+    enAttente,
+    parStatut,
+    parZone,
+    parCategorie,
+    dernieres,
+  });
+});
 // ══════════════════════════════════════════════════════════
 //  CRUD REFERENTIELS (Zones, Categories, Pilotes)
 // ══════════════════════════════════════════════════════════
 
 // --- ZONES ---
-app.get('/api/admin/zones', verifierToken, (req, res) => {
-  res.json(dbSqlite.prepare('SELECT * FROM T_BS_ZONES ORDER BY Nom').all());
+app.get("/api/admin/zones", verifierToken, (req, res) => {
+  res.json(dbSqlite.prepare("SELECT * FROM T_BS_ZONES ORDER BY Nom").all());
 });
-app.post('/api/admin/zones', verifierToken, (req, res) => {
+app.post("/api/admin/zones", verifierToken, (req, res) => {
   const { nom } = req.body;
-  if (!nom) return res.status(400).json({ erreur: 'Nom requis' });
-  const r = dbSqlite.prepare('INSERT INTO T_BS_ZONES (Nom) VALUES (?)').run(nom);
+  if (!nom) return res.status(400).json({ erreur: "Nom requis" });
+  const r = dbSqlite
+    .prepare("INSERT INTO T_BS_ZONES (Nom) VALUES (?)")
+    .run(nom);
   res.json({ succes: true, id: r.lastInsertRowid });
 });
-app.put('/api/admin/zones/:id', verifierToken, (req, res) => {
+app.put("/api/admin/zones/:id", verifierToken, (req, res) => {
   const { nom, actif } = req.body;
-  dbSqlite.prepare('UPDATE T_BS_ZONES SET Nom = ?, Actif = ? WHERE IdZone = ?').run(nom, actif ? 1 : 0, req.params.id);
+  dbSqlite
+    .prepare("UPDATE T_BS_ZONES SET Nom = ?, Actif = ? WHERE IdZone = ?")
+    .run(nom, actif ? 1 : 0, req.params.id);
   res.json({ succes: true });
 });
-app.delete('/api/admin/zones/:id', verifierToken, (req, res) => {
-  dbSqlite.prepare('UPDATE T_BS_ZONES SET Actif = 0 WHERE IdZone = ?').run(req.params.id);
+app.delete("/api/admin/zones/:id", verifierToken, (req, res) => {
+  dbSqlite
+    .prepare("UPDATE T_BS_ZONES SET Actif = 0 WHERE IdZone = ?")
+    .run(req.params.id);
   res.json({ succes: true });
 });
 
 // --- CATEGORIES ---
-app.get('/api/admin/categories', verifierToken, (req, res) => {
-  res.json(dbSqlite.prepare('SELECT * FROM T_BS_CATEGORIES ORDER BY Nom').all());
+app.get("/api/admin/categories", verifierToken, (req, res) => {
+  res.json(
+    dbSqlite.prepare("SELECT * FROM T_BS_CATEGORIES ORDER BY Nom").all(),
+  );
 });
-app.post('/api/admin/categories', verifierToken, (req, res) => {
+app.post("/api/admin/categories", verifierToken, (req, res) => {
   const { nom } = req.body;
-  if (!nom) return res.status(400).json({ erreur: 'Nom requis' });
-  const r = dbSqlite.prepare('INSERT INTO T_BS_CATEGORIES (Nom) VALUES (?)').run(nom);
+  if (!nom) return res.status(400).json({ erreur: "Nom requis" });
+  const r = dbSqlite
+    .prepare("INSERT INTO T_BS_CATEGORIES (Nom) VALUES (?)")
+    .run(nom);
   res.json({ succes: true, id: r.lastInsertRowid });
 });
-app.put('/api/admin/categories/:id', verifierToken, (req, res) => {
+app.put("/api/admin/categories/:id", verifierToken, (req, res) => {
   const { nom, actif } = req.body;
-  dbSqlite.prepare('UPDATE T_BS_CATEGORIES SET Nom = ?, Actif = ? WHERE IdCategorie = ?').run(nom, actif ? 1 : 0, req.params.id);
+  dbSqlite
+    .prepare(
+      "UPDATE T_BS_CATEGORIES SET Nom = ?, Actif = ? WHERE IdCategorie = ?",
+    )
+    .run(nom, actif ? 1 : 0, req.params.id);
   res.json({ succes: true });
 });
-app.delete('/api/admin/categories/:id', verifierToken, (req, res) => {
-  dbSqlite.prepare('UPDATE T_BS_CATEGORIES SET Actif = 0 WHERE IdCategorie = ?').run(req.params.id);
+app.delete("/api/admin/categories/:id", verifierToken, (req, res) => {
+  dbSqlite
+    .prepare("UPDATE T_BS_CATEGORIES SET Actif = 0 WHERE IdCategorie = ?")
+    .run(req.params.id);
   res.json({ succes: true });
 });
 
 // --- PILOTES (intervenants) ---
-app.get('/api/admin/pilotes', verifierToken, (req, res) => {
-  res.json(dbSqlite.prepare('SELECT * FROM T_BS_PILOTES ORDER BY NomComplet').all());
+app.get("/api/admin/pilotes", verifierToken, (req, res) => {
+  res.json(
+    dbSqlite.prepare("SELECT * FROM T_BS_PILOTES ORDER BY NomComplet").all(),
+  );
 });
-app.post('/api/admin/pilotes', verifierToken, (req, res) => {
+app.post("/api/admin/pilotes", verifierToken, (req, res) => {
   const { nomComplet, type } = req.body;
-  if (!nomComplet || !type) return res.status(400).json({ erreur: 'Nom et type requis' });
-  const r = dbSqlite.prepare('INSERT INTO T_BS_PILOTES (NomComplet, Type) VALUES (?, ?)').run(nomComplet, type);
+  if (!nomComplet || !type)
+    return res.status(400).json({ erreur: "Nom et type requis" });
+  const r = dbSqlite
+    .prepare("INSERT INTO T_BS_PILOTES (NomComplet, Type) VALUES (?, ?)")
+    .run(nomComplet, type);
   res.json({ succes: true, id: r.lastInsertRowid });
 });
-app.put('/api/admin/pilotes/:id', verifierToken, (req, res) => {
+app.put("/api/admin/pilotes/:id", verifierToken, (req, res) => {
   const { nomComplet, type, actif } = req.body;
-  dbSqlite.prepare('UPDATE T_BS_PILOTES SET NomComplet = ?, Type = ?, Actif = ? WHERE IdPilote = ?').run(nomComplet, type, actif ? 1 : 0, req.params.id);
+  dbSqlite
+    .prepare(
+      "UPDATE T_BS_PILOTES SET NomComplet = ?, Type = ?, Actif = ? WHERE IdPilote = ?",
+    )
+    .run(nomComplet, type, actif ? 1 : 0, req.params.id);
   res.json({ succes: true });
 });
-app.delete('/api/admin/pilotes/:id', verifierToken, (req, res) => {
-  dbSqlite.prepare('UPDATE T_BS_PILOTES SET Actif = 0 WHERE IdPilote = ?').run(req.params.id);
+app.delete("/api/admin/pilotes/:id", verifierToken, (req, res) => {
+  dbSqlite
+    .prepare("UPDATE T_BS_PILOTES SET Actif = 0 WHERE IdPilote = ?")
+    .run(req.params.id);
   res.json({ succes: true });
 });
 const PORT = process.env.PORT || 5000;

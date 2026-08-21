@@ -1,78 +1,90 @@
 @import '../styles/design-tokens.css';
 
 .dash-page {
-  padding: 32px 40px;
-  max-width: 1400px;
+  padding: var(--esp-6) var(--esp-7);
+  max-width: 1500px;
   margin: 0 auto;
+  height: calc(100vh - 180px); /* hauteur dispo sous header + nav + banniere */
+  display: flex;
+  flex-direction: column;
 }
 
 .dash-filtres {
   display: flex;
-  gap: 16px;
+  gap: var(--esp-4);
   align-items: center;
-  margin-bottom: 22px;
+  margin-bottom: var(--esp-5);
   background: white;
-  padding: 16px 20px;
+  padding: var(--esp-4) var(--esp-5);
   border-radius: var(--rayon-md);
   box-shadow: var(--ombre-sm);
+  flex-shrink: 0;
 }
 
 .dash-filtres select {
-  padding: 10px 14px;
+  padding: var(--esp-2) var(--esp-3);
   border: 1px solid var(--couleur-bordure);
   border-radius: var(--rayon-sm);
-  font-family: inherit;
+  font-family: var(--police);
   font-weight: 600;
+  font-size: var(--texte-sm);
   color: var(--couleur-texte);
   background: white;
 }
 
 .dash-compteur {
-  color: var(--couleur-texte-att);
+  color: var(--couleur-teal-800);
   font-weight: 700;
+  font-size: var(--texte-sm);
   margin-left: auto;
   background: var(--riva-bleu-clair-fond);
-  padding: 8px 16px;
+  padding: var(--esp-2) var(--esp-4);
   border-radius: 20px;
 }
 
 .dash-split {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
-  gap: 24px;
-  align-items: start;
+  gap: var(--esp-5);
+  flex: 1;
+  min-height: 0; /* essentiel pour que les enfants puissent scroller dans un flex */
 }
 
 .dash-table-conteneur {
   background: white;
   border-radius: var(--rayon-md);
   box-shadow: var(--ombre-sm);
-  overflow: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .dash-table { width: 100%; border-collapse: collapse; font-family: var(--police); }
+
+.dash-table thead { position: sticky; top: 0; z-index: 5; }
 
 .dash-table th {
   background: #3b6f66;
   color: white;
   text-align: left;
-  padding: 14px 16px;
-  font-size: 0.8rem;
+  padding: var(--esp-4) var(--esp-4);
+  font-size: var(--texte-xs);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   font-weight: 700;
 }
 
 .dash-table td {
-  padding: 14px 16px;
+  padding: var(--esp-4);
   border-top: 1px solid var(--couleur-bordure);
-  font-size: 0.92rem;
+  font-size: var(--texte-base);
+  color: var(--couleur-texte);
 }
 
 .dash-table-vide {
   text-align: center;
   color: var(--couleur-texte-att);
-  padding: 40px 0 !important;
+  padding: var(--esp-8) 0 !important;
   font-style: italic;
 }
 
@@ -82,89 +94,99 @@
   background: #fde047;
   border: 1px solid #ca8a04;
   border-radius: 4px;
-  padding: 6px 16px;
+  padding: var(--esp-1) var(--esp-4);
   font-weight: 800;
-  font-size: 0.78rem;
+  font-size: var(--texte-xs);
   cursor: pointer;
   color: #422006;
-  transition: background 0.15s;
+  transition: background var(--transition-rapide);
 }
 
 .dash-sel:hover { background: #facc15; }
 
-.dash-badge { padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 0.78rem; }
+.dash-badge { padding: var(--esp-1) var(--esp-3); border-radius: 20px; font-weight: 700; font-size: var(--texte-xs); }
 
 .dash-panneau {
   background: white;
   border-radius: var(--rayon-md);
   box-shadow: var(--ombre-sm);
-  padding: 26px;
-  position: sticky;
-  top: 20px;
-  max-height: calc(100vh - 60px);
+  padding: var(--esp-6);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .dash-panneau-vide {
   color: var(--couleur-texte-att);
   text-align: center;
-  padding: 50px 20px;
+  padding: var(--esp-8) var(--esp-5);
   font-style: italic;
+  margin: auto;
 }
 
 .dash-panneau-entete {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
-  padding-bottom: 14px;
+  margin-bottom: var(--esp-5);
+  padding-bottom: var(--esp-4);
   border-bottom: 2px solid var(--riva-bleu-clair-fond);
 }
 
-.dash-panneau-entete h2 { color: var(--couleur-teal-800); font-size: 1.15rem; }
+.dash-panneau-entete h2 {
+  color: var(--couleur-teal-800);
+  font-family: var(--police-titre);
+  font-size: var(--texte-lg);
+  font-weight: 700;
+}
 
 .dash-btn-pdf {
   background: var(--couleur-teal-700);
   color: white;
   border: none;
   border-radius: var(--rayon-sm);
-  padding: 9px 16px;
+  padding: var(--esp-2) var(--esp-4);
   font-weight: 700;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: var(--texte-sm);
+  transition: background var(--transition-rapide);
 }
 
-.dash-infos { display: grid; grid-template-columns: 115px 1fr; gap: 10px 12px; margin-bottom: 18px; }
+.dash-btn-pdf:hover { background: var(--couleur-teal-800); }
 
-.dash-infos dt { color: var(--couleur-texte-att); font-weight: 700; font-size: 0.8rem; }
+.dash-infos { display: grid; grid-template-columns: 120px 1fr; gap: var(--esp-3) var(--esp-3); margin-bottom: var(--esp-5); }
 
-.dash-infos dd { font-size: 0.9rem; }
+.dash-infos dt { color: var(--couleur-texte-att); font-weight: 700; font-size: var(--texte-xs); text-transform: uppercase; letter-spacing: 0.4px; }
+
+.dash-infos dd { font-size: var(--texte-base); }
 
 .dash-urgent { color: var(--couleur-urgence); font-weight: 700; }
 
-.dash-btn { border: none; border-radius: var(--rayon-sm); padding: 10px 18px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+.dash-btn { border: none; border-radius: var(--rayon-sm); padding: var(--esp-3) var(--esp-4); font-weight: 700; cursor: pointer; font-size: var(--texte-sm); transition: filter var(--transition-rapide); }
 
-.dash-actions-validation { display: flex; gap: 10px; margin-bottom: 16px; }
+.dash-btn:hover { filter: brightness(1.1); }
+
+.dash-actions-validation { display: flex; gap: var(--esp-3); margin-bottom: var(--esp-4); }
 
 .dash-btn-valider { background: #16a34a; color: white; }
 .dash-btn-refuser { background: var(--couleur-urgence); color: white; }
 .dash-btn-annuler { background: #6b7280; color: white; }
 .dash-btn-supprimer { background: #1a1a1a; color: white; }
 
-.dash-refus { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.dash-refus { display: flex; flex-direction: column; gap: var(--esp-3); margin-bottom: var(--esp-4); }
 
-.dash-refus textarea { padding: 10px; border: 1px solid var(--couleur-bordure); border-radius: var(--rayon-sm); font-family: inherit; }
+.dash-refus textarea { padding: var(--esp-3); border: 1px solid var(--couleur-bordure); border-radius: var(--rayon-sm); font-family: var(--police); resize: none; }
 
-.dash-panneau label { display: block; font-weight: 700; font-size: 0.82rem; margin-top: 14px; margin-bottom: 6px; color: var(--couleur-texte); }
+.dash-panneau label { display: block; font-weight: 700; font-size: var(--texte-xs); text-transform: uppercase; letter-spacing: 0.4px; margin-top: var(--esp-4); margin-bottom: var(--esp-2); color: var(--couleur-texte-att); }
 
-.dash-panneau select { width: 100%; padding: 10px; border: 1px solid var(--couleur-bordure); border-radius: var(--rayon-sm); font-family: inherit; }
+.dash-panneau select { width: 100%; padding: var(--esp-3); border: 1px solid var(--couleur-bordure); border-radius: var(--rayon-sm); font-family: var(--police); font-size: var(--texte-base); }
 
-.dash-actions-dangereuses { display: flex; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--couleur-bordure); }
+.dash-actions-dangereuses { display: flex; gap: var(--esp-3); margin-top: var(--esp-5); padding-top: var(--esp-4); border-top: 1px solid var(--couleur-bordure); }
 
-.dash-histo-titre { margin-top: 22px; margin-bottom: 12px; color: var(--couleur-teal-800); font-size: 0.98rem; }
+.dash-histo-titre { margin-top: var(--esp-5); margin-bottom: var(--esp-3); color: var(--couleur-teal-800); font-size: var(--texte-md); font-family: var(--police-titre); }
 
 .dash-histo-liste { list-style: none; }
 
-.dash-histo-liste li { padding: 10px 0; border-bottom: 1px solid var(--couleur-bordure); font-size: 0.86rem; }
+.dash-histo-liste li { padding: var(--esp-3) 0; border-bottom: 1px solid var(--couleur-bordure); font-size: var(--texte-sm); }
 
-.dash-histo-liste span { color: var(--couleur-texte-att); font-size: 0.76rem; margin-left: 8px; }
+.dash-histo-liste span { color: var(--couleur-texte-att); font-size: var(--texte-xs); margin-left: var(--esp-2); }

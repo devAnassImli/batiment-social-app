@@ -4,7 +4,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import RouteProtegee from './components/RouteProtegee';
 import AdminReferentiels from './pages/AdminReferentiels';
-
+import AdminStatistiques from './pages/AdminStatistiques';
 function App() {
   return (
     <BrowserRouter>
@@ -14,8 +14,10 @@ function App() {
         <Route path="/admin/dashboard" element={<RouteProtegee><AdminDashboard /></RouteProtegee>} />
         
 <Route path="/admin/referentiels" element={<RouteProtegee><AdminReferentiels /></RouteProtegee>} />
+<Route path="/admin/statistiques" element={<RouteProtegee><AdminStatistiques /></RouteProtegee>} />
       </Routes>
     </BrowserRouter>
+    
   );
 }
 

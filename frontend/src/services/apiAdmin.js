@@ -50,3 +50,4 @@ export const listerPilotesAdmin = () => appelAuth('/admin/pilotes');
 export const creerPilote = (nomComplet, type) => appelAuth('/admin/pilotes', { method: 'POST', body: JSON.stringify({ nomComplet, type }) });
 export const modifierPilote = (id, nomComplet, type, actif) => appelAuth(`/admin/pilotes/${id}`, { method: 'PUT', body: JSON.stringify({ nomComplet, type, actif }) });
 export const desactiverPilote = (id) => appelAuth(`/admin/pilotes/${id}`, { method: 'DELETE' });
+export const recupererStatistiques = () => appelAuth('/admin/statistiques');
