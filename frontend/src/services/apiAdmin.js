@@ -17,7 +17,15 @@ async function appelAuth(url, options = {}) {
   }
   return reponse.json();
 }
-
+export function ouvrirPdfSignalement(id) {
+  const token = sessionStorage.getItem('admin_token');
+  fetch(`${API_BASE_URL}/signalements/${id}/pdf`, { headers: { Authorization: `Bearer ${token}` } })
+    .then((res) => res.blob())
+    .then((blob) => {
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    });
+}
 export const recupererSignalements = () => appelAuth('/signalements');
 export const recupererSignalement = (id) => appelAuth(`/signalements/${id}`);
 export const validerSignalement = (id) => appelAuth(`/signalements/${id}/valider`, { method: 'POST' });
@@ -28,3 +36,17 @@ export const changerAvancement = (id, idAvancement) => appelAuth(`/signalements/
 export const assignerPilote = (id, idPilote) => appelAuth(`/signalements/${id}/pilote`, { method: 'POST', body: JSON.stringify({ idPilote }) });
 export const recupererAvancements = () => appelAuth('/reference/avancement');
 export const recupererPilotes = () => appelAuth('/reference/pilotes');
+export const listerZones = () => appelAuth('/admin/zones');
+export const creerZone = (nom) => appelAuth('/admin/zones', { method: 'POST', body: JSON.stringify({ nom }) });
+export const modifierZone = (id, nom, actif) => appelAuth(`/admin/zones/${id}`, { method: 'PUT', body: JSON.stringify({ nom, actif }) });
+export const desactiverZone = (id) => appelAuth(`/admin/zones/${id}`, { method: 'DELETE' });
+
+export const listerCategories = () => appelAuth('/admin/categories');
+export const creerCategorie = (nom) => appelAuth('/admin/categories', { method: 'POST', body: JSON.stringify({ nom }) });
+export const modifierCategorie = (id, nom, actif) => appelAuth(`/admin/categories/${id}`, { method: 'PUT', body: JSON.stringify({ nom, actif }) });
+export const desactiverCategorie = (id) => appelAuth(`/admin/categories/${id}`, { method: 'DELETE' });
+
+export const listerPilotesAdmin = () => appelAuth('/admin/pilotes');
+export const creerPilote = (nomComplet, type) => appelAuth('/admin/pilotes', { method: 'POST', body: JSON.stringify({ nomComplet, type }) });
+export const modifierPilote = (id, nomComplet, type, actif) => appelAuth(`/admin/pilotes/${id}`, { method: 'PUT', body: JSON.stringify({ nomComplet, type, actif }) });
+export const desactiverPilote = (id) => appelAuth(`/admin/pilotes/${id}`, { method: 'DELETE' });

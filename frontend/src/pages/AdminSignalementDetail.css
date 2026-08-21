@@ -53,3 +53,18 @@
 .admin-detail-historique li { padding: 12px 0; border-bottom: 1px solid var(--couleur-bordure); }
 
 .admin-detail-histo-date { color: var(--couleur-texte-att); font-size: 0.8rem; margin-left: 10px; }
+
+.admin-detail-header {
+  justify-content: space-between;
+}
+
+.admin-btn-pdf {
+  background: var(--couleur-teal-700);
+  color: white;
+  border: none;
+  border-radius: var(--rayon-sm);
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: auto;
+}

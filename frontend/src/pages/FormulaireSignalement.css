@@ -173,3 +173,83 @@
 }
 
 .signalement-annuler-global:hover { color: var(--couleur-urgence); }
+
+.signalement-grille-zones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.signalement-zone-carte {
+  background: #f7f9f9;
+  border: 2px solid var(--couleur-bordure);
+  border-radius: var(--rayon-md);
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all var(--transition-rapide);
+}
+
+.signalement-zone-carte:hover {
+  border-color: var(--couleur-teal-600);
+  transform: translateY(-2px);
+  box-shadow: var(--ombre-sm);
+}
+
+.signalement-zone-icone { width: 48px; height: 48px; object-fit: contain; }
+
+.signalement-zone-secours { display: none; font-size: 2rem; }
+
+.signalement-zone-nom { font-weight: 700; font-size: 1rem; }
+
+.signalement-confirmation-fond {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 54, 56, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.signalement-confirmation-boite {
+  background: white;
+  border-radius: var(--rayon-lg);
+  padding: 32px;
+  width: 380px;
+  box-shadow: var(--ombre-lg);
+  text-align: center;
+}
+
+.signalement-confirmation-boite h3 {
+  color: var(--couleur-teal-800);
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.signalement-confirmation-boite p {
+  color: var(--couleur-texte-att);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.signalement-confirmation-boutons {
+  display: flex;
+  gap: 12px;
+}
+
+.signalement-confirmation-non, .signalement-confirmation-oui {
+  flex: 1;
+  border: none;
+  border-radius: var(--rayon-sm);
+  padding: 12px 0;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.signalement-confirmation-non { background: #f1f2f3; color: var(--couleur-texte); }
+.signalement-confirmation-oui { background: var(--couleur-teal-700); color: white; }

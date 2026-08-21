@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { recupererSignalements } from '../services/apiAdmin';
+import AdminLayout from '../components/AdminLayout';
+import {
+  recupererSignalements, recupererSignalement, validerSignalement, refuserSignalement,
+  annulerSignalement, supprimerSignalement, changerAvancement, assignerPilote,
+  recupererAvancements, recupererPilotes, ouvrirPdfSignalement,
+} from '../services/apiAdmin';
 import './AdminDashboard.css';
 
 const COULEURS_STATUT = {
@@ -12,52 +16,45 @@ const COULEURS_STATUT = {
 
 export default function AdminDashboard() {
   const [signalements, setSignalements] = useState([]);
-  const [chargement, setChargement] = useState(true);
+  const [idSelectionne, setIdSelectionne] = useState(null);
+  const [detail, setDetail] = useState(null);
+  const [avancements, setAvancements] = useState([]);
+  const [pilotes, setPilotes] = useState([]);
+  const [motifRefus, setMotifRefus] = useState('');
+  const [afficherRefus, setAfficherRefus] = useState(false);
   const [filtreZone, setFiltreZone] = useState('Tous');
   const [filtreStatut, setFiltreStatut] = useState('Tous');
-  const navigate = useNavigate();
 
-  const utilisateur = JSON.parse(sessionStorage.getItem('admin_utilisateur') || '{}');
+  useEffect(() => { chargerListe(); chargerReferences(); }, []);
+  useEffect(() => { if (idSelectionne) chargerDetail(idSelectionne); }, [idSelectionne]);
 
-  useEffect(() => { chargerSignalements(); }, []);
-
-  const chargerSignalements = async () => {
-    setChargement(true);
-    const donnees = await recupererSignalements();
-    setSignalements(donnees || []);
-    setChargement(false);
+  const chargerListe = async () => setSignalements((await recupererSignalements()) || []);
+  const chargerReferences = async () => {
+    setAvancements((await recupererAvancements()) || []);
+    setPilotes((await recupererPilotes()) || []);
   };
+  const chargerDetail = async (id) => setDetail(await recupererSignalement(id));
 
-  const seDeconnecter = () => {
-    sessionStorage.removeItem('admin_token');
-    sessionStorage.removeItem('admin_utilisateur');
-    navigate('/admin');
+  const action = async (fn) => {
+    await fn();
+    chargerListe();
+    if (idSelectionne) chargerDetail(idSelectionne);
   };
 
   const zonesUniques = ['Tous', ...new Set(signalements.map((s) => s.ZoneNom))];
-
-  const signalementsFiltres = signalements.filter((s) => {
-    const matchZone = filtreZone === 'Tous' || s.ZoneNom === filtreZone;
-    const matchStatut = filtreStatut === 'Tous' || s.Statut === filtreStatut;
-    return matchZone && matchStatut;
-  });
+  const signalementsFiltres = signalements.filter((s) =>
+    (filtreZone === 'Tous' || s.ZoneNom === filtreZone) &&
+    (filtreStatut === 'Tous' || s.Statut === filtreStatut)
+  );
 
   return (
-    <div className="admin-dashboard">
-      <header className="admin-header">
-        <h1>BÂTIMENT SOCIAL — Back-office</h1>
-        <div className="admin-header-droite">
-          <span>{utilisateur.nomComplet}</span>
-          <button onClick={seDeconnecter}>Déconnexion</button>
-        </div>
-      </header>
+    <AdminLayout titrePage="SUIVI GLOBAL DES DEMANDES">
+      <div className="dash-page">
 
-      <main className="admin-main">
-        <div className="admin-filtres">
+        <div className="dash-filtres">
           <select value={filtreZone} onChange={(e) => setFiltreZone(e.target.value)}>
             {zonesUniques.map((z) => <option key={z} value={z}>{z}</option>)}
           </select>
-
           <select value={filtreStatut} onChange={(e) => setFiltreStatut(e.target.value)}>
             <option value="Tous">Tous les statuts</option>
             <option value="A_VALIDER">À valider</option>
@@ -65,48 +62,117 @@ export default function AdminDashboard() {
             <option value="REFUSE">Refusé</option>
             <option value="ANNULE">Annulé</option>
           </select>
-
-          <span className="admin-compteur">{signalementsFiltres.length} signalement(s)</span>
+          <span className="dash-compteur">{signalementsFiltres.length} demande(s)</span>
         </div>
 
-        {chargement ? (
-          <p>Chargement...</p>
-        ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>N°</th><th>Date</th><th>Demandeur</th><th>Zone</th>
-                <th>Catégorie</th><th>Urgence</th><th>Description</th><th>Statut</th>
-              </tr>
-            </thead>
-            <tbody>
-              {signalementsFiltres.map((s) => {
-                const statutInfo = COULEURS_STATUT[s.Statut] || COULEURS_STATUT.A_VALIDER;
-                return (
-                  <tr
-                    key={s.IdSignalement}
-                    onClick={() => navigate(`/admin/signalement/${s.IdSignalement}`)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <td>#{s.IdSignalement}</td>
-                    <td>{new Date(s.DateCreation).toLocaleDateString('fr-FR')}</td>
-                    <td>{s.NomDemandeur}</td>
-                    <td>{s.ZoneNom}</td>
-                    <td>{s.CategorieNom}</td>
-                    <td>{s.Urgence === 'Urgent' ? <span className="admin-badge-urgent">⚠ Urgent</span> : 'Normal'}</td>
-                    <td className="admin-description-cell">{s.Description}</td>
-                    <td>
-                      <span className="admin-badge-statut" style={{ color: statutInfo.couleur, background: statutInfo.fond }}>
-                        {statutInfo.label}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </main>
-    </div>
+        <div className="dash-split">
+          <div className="dash-table-conteneur">
+            <table className="dash-table">
+              <thead>
+                <tr>
+                  <th></th><th>N°</th><th>Date</th><th>Demandeur</th><th>Zone</th><th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                {signalementsFiltres.length === 0 && (
+                  <tr><td colSpan="6" className="dash-table-vide">Aucune demande pour le moment.</td></tr>
+                )}
+                {signalementsFiltres.map((s) => {
+                  const info = COULEURS_STATUT[s.Statut] || COULEURS_STATUT.A_VALIDER;
+                  return (
+                    <tr key={s.IdSignalement} className={idSelectionne === s.IdSignalement ? 'dash-ligne-active' : ''}>
+                      <td>
+                        <button className="dash-sel" onClick={() => setIdSelectionne(s.IdSignalement)}>SEL</button>
+                      </td>
+                      <td>#{s.IdSignalement}</td>
+                      <td>{new Date(s.DateCreation).toLocaleDateString('fr-FR')}</td>
+                      <td>{s.NomDemandeur}</td>
+                      <td>{s.ZoneNom}</td>
+                      <td><span className="dash-badge" style={{ color: info.couleur, background: info.fond }}>{info.label}</span></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="dash-panneau">
+            {!detail && <p className="dash-panneau-vide">Sélectionnez une ligne avec « SEL » pour voir le détail.</p>}
+
+            {detail && (() => {
+              const s = detail.signalement;
+              const historique = detail.historique;
+              return (
+                <>
+                  <div className="dash-panneau-entete">
+                    <h2>Signalement #{s.IdSignalement}</h2>
+                    <button className="dash-btn-pdf" onClick={() => ouvrirPdfSignalement(s.IdSignalement)}>Imprimer / PDF</button>
+                  </div>
+
+                  <dl className="dash-infos">
+                    <dt>Demandeur</dt><dd>{s.NomDemandeur} (matricule {s.MatriculeDemandeur})</dd>
+                    <dt>Zone</dt><dd>{s.ZoneNom}</dd>
+                    <dt>Catégorie</dt><dd>{s.CategorieNom}</dd>
+                    <dt>Urgence</dt><dd>{s.Urgence === 'Urgent' ? <span className="dash-urgent">⚠ Urgent</span> : 'Normal'}</dd>
+                    <dt>Description</dt><dd>{s.Description}</dd>
+                    <dt>Statut</dt><dd><strong>{s.Statut}</strong></dd>
+                  </dl>
+
+                  {s.Statut === 'A_VALIDER' && (
+                    <div className="dash-actions-validation">
+                      <button className="dash-btn dash-btn-valider" onClick={() => action(() => validerSignalement(s.IdSignalement))}>✓ Valider</button>
+                      <button className="dash-btn dash-btn-refuser" onClick={() => setAfficherRefus(true)}>✕ Refuser</button>
+                    </div>
+                  )}
+
+                  {afficherRefus && (
+                    <div className="dash-refus">
+                      <textarea placeholder="Motif du refus..." value={motifRefus} onChange={(e) => setMotifRefus(e.target.value)} />
+                      <button className="dash-btn dash-btn-refuser" onClick={() => { action(() => refuserSignalement(s.IdSignalement, motifRefus)); setAfficherRefus(false); }}>
+                        Confirmer le refus
+                      </button>
+                    </div>
+                  )}
+
+                  <label>Assigner un intervenant</label>
+                  <select value={s.IdPilote || ''} onChange={(e) => action(() => assignerPilote(s.IdSignalement, e.target.value))}>
+                    <option value="">— Choisir —</option>
+                    {pilotes.length === 0 && <option disabled>Aucun intervenant enregistré</option>}
+                    {pilotes.map((p) => <option key={p.IdPilote} value={p.IdPilote}>{p.NomComplet} ({p.Type})</option>)}
+                  </select>
+
+                  <label>Avancement</label>
+                  <select value={s.IdAvancement || ''} onChange={(e) => action(() => changerAvancement(s.IdSignalement, e.target.value))}>
+                    <option value="">— Choisir —</option>
+                    {avancements.map((a) => <option key={a.IdAvancement} value={a.IdAvancement}>{a.Nom}</option>)}
+                  </select>
+
+                  <div className="dash-actions-dangereuses">
+                    <button className="dash-btn dash-btn-annuler" onClick={() => action(() => annulerSignalement(s.IdSignalement))}>Annuler</button>
+                    <button
+                      className="dash-btn dash-btn-supprimer"
+                      onClick={() => { if (window.confirm('Supprimer définitivement ?')) { supprimerSignalement(s.IdSignalement).then(() => { setIdSelectionne(null); setDetail(null); chargerListe(); }); } }}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+
+                  <h3 className="dash-histo-titre">Historique</h3>
+                  <ul className="dash-histo-liste">
+                    {historique.map((h) => (
+                      <li key={h.IdHistorique}>
+                        <strong>{h.Action}</strong> — {h.Auteur}
+                        <span>{new Date(h.DateAction).toLocaleString('fr-FR')}</span>
+                        {h.Commentaire && <p>{h.Commentaire}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      </div>
+    </AdminLayout>
   );
 }

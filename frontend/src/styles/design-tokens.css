@@ -31,3 +31,12 @@
   --transition-rapide: 0.15s ease;
   --transition-normale: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+:root {
+  --police-titre: Georgia, 'Times New Roman', serif;
+  --riva-teal-degrade: linear-gradient(90deg, #5fa89a, #3d8a7c);
+  --riva-nav-fonce: #2d6e62;
+  --riva-gris-banniere: linear-gradient(90deg, #94a3b8, #cbd5e1);
+  --riva-gris-encadre: #e2e8e8;
+  --riva-bleu-clair-fond: #eef4f4;
+}

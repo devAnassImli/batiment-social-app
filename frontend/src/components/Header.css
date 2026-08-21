@@ -1,11 +1,11 @@
 .app-header {
   width: 100%;
   background: linear-gradient(180deg, var(--couleur-teal-700), var(--couleur-teal-800));
-  border-bottom: 3px solid var(--couleur-or);
+  border-bottom: 4px solid var(--couleur-or);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 12px 28px;
+  padding: 20px 40px;
   box-sizing: border-box;
   box-shadow: var(--ombre-md);
   font-family: var(--police);
@@ -14,8 +14,8 @@
 .app-header-gauche {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  font-size: 0.85rem;
+  gap: 4px;
+  font-size: 1.05rem;
   color: var(--couleur-or-clair);
 }
 
@@ -25,32 +25,33 @@
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   color: white;
+  font-size: 1.15rem;
 }
 
 .app-header-centre {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 20px;
   justify-content: center;
 }
 
-.logo-img { height: 36px; width: auto; object-fit: contain; }
+.logo-img { height: 56px; width: auto; object-fit: contain; }
 
 .logo-sam-img {
   background: white;
-  padding: 5px 10px;
-  border-radius: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
 }
 
 .app-header-titre {
   text-align: left;
-  border-left: 1px solid rgba(255,255,255,0.25);
-  padding-left: 14px;
+  border-left: 2px solid rgba(255,255,255,0.25);
+  padding-left: 20px;
 }
 
 .app-header-titre h1 {
   color: white;
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 800;
   margin: 0;
   letter-spacing: 0.5px;
@@ -58,7 +59,7 @@
 
 .app-header-soustitre {
   color: var(--couleur-or-clair);
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -68,28 +69,27 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 16px;
 }
 
 .app-header-utilisateur {
   color: white;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   background: rgba(255,255,255,0.12);
-  padding: 5px 14px;
+  padding: 8px 18px;
   border-radius: 20px;
 }
 
 .app-header-deconnexion {
-  background: rgba(255,255,255,0.15);
+  background: var(--couleur-urgence);
   border: none;
   color: white;
-  padding: 8px 16px;
+  padding: 12px 22px;
   border-radius: var(--rayon-sm);
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background var(--transition-rapide);
+  transition: all var(--transition-rapide);
 }
-
-.app-header-deconnexion:hover { background: rgba(255,255,255,0.25); }
+.app-header-deconnexion:hover { background: #a52e21; }

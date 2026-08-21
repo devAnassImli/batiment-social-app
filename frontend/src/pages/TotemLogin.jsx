@@ -92,7 +92,7 @@ export default function TotemLogin() {
             <main className="totem-accueil">
               <div className="totem-confirmation">
                 <span className="totem-confirmation-icone">✅</span>
-                <h2>Signalement envoyé</h2>
+                               <h2>Demande d'intervention enregistrée</h2>
                 <p>Merci {employe.Nome}, votre signalement a bien été transmis.</p>
               </div>
             </main>

@@ -1,0 +1,127 @@
+@import '../styles/design-tokens.css';
+
+.al3-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f0f2f5;
+  font-family: var(--police);
+}
+
+.al3-header {
+  background: var(--riva-teal-degrade);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 14px 32px;
+  color: white;
+}
+
+.al3-header-gauche { font-size: 0.85rem; }
+
+.al3-header-centre { text-align: center; }
+
+.al3-header-sous { font-size: 0.75rem; letter-spacing: 1px; opacity: 0.85; }
+
+.al3-header-centre h1 {
+  font-family: var(--police-titre);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+}
+
+.al3-header-droite {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.al3-header-user { text-align: right; font-size: 0.8rem; }
+
+.al3-user-nom { font-weight: 700; margin-right: 8px; }
+
+.al3-user-badge {
+  background: var(--couleur-urgence);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.al3-user-email { display: block; opacity: 0.8; font-style: italic; }
+
+.al3-deconnexion {
+  background: var(--riva-nav-fonce);
+  color: white;
+  border: none;
+  border-radius: var(--rayon-sm);
+  padding: 8px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.al3-nav {
+  background: var(--riva-nav-fonce);
+  display: flex;
+  padding: 0 32px;
+}
+
+.al3-nav-item {
+  position: relative;
+  color: white;
+  padding: 14px 22px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.al3-nav-item:hover { background: rgba(255,255,255,0.08); }
+
+.al3-sous-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  min-width: 200px;
+  box-shadow: var(--ombre-md);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+}
+
+.al3-sous-menu a {
+  color: var(--couleur-texte);
+  text-decoration: none;
+  padding: 12px 18px;
+  font-weight: 500;
+  font-size: 0.88rem;
+}
+
+.al3-sous-menu a:hover { background: var(--couleur-teal-100); }
+
+.al3-banniere-titre {
+  background: var(--riva-gris-banniere);
+  color: white;
+  text-align: center;
+  padding: 14px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.al3-contenu { flex: 1; }
+
+.al3-pied {
+  text-align: center;
+  padding: 14px;
+  font-size: 0.78rem;
+}
+
+.al3-pied a { color: #2563eb; text-decoration: none; }

@@ -1,9 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   recupererSignalement, validerSignalement, refuserSignalement,
   annulerSignalement, supprimerSignalement, changerAvancement,
   assignerPilote, recupererAvancements, recupererPilotes,
+  ouvrirPdfSignalement,
 } from '../services/apiAdmin';
 import './AdminSignalementDetail.css';
 
@@ -27,6 +29,7 @@ export default function AdminSignalementDetail() {
     setDonnees(res);
     setAvancements(av || []);
     setPilotes(pi || []);
+    console.log('Pilotes recus:', pi);
   };
 
   if (!donnees) return <div className="admin-detail-page">Chargement...</div>;
@@ -39,6 +42,9 @@ export default function AdminSignalementDetail() {
       <header className="admin-detail-header">
         <button onClick={() => navigate('/admin/dashboard')}>← Retour à la liste</button>
         <h1>Signalement #{s.IdSignalement}</h1>
+
+        {/* BOUTON PDF AJOUTÉ COMME DEMANDÉ */}
+       <button className="admin-btn-pdf" onClick={() => ouvrirPdfSignalement(id)}>Imprimer / PDF</button>
       </header>
 
       <div className="admin-detail-grille">
