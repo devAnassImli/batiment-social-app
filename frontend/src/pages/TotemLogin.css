@@ -274,3 +274,20 @@
   cursor: pointer;
   box-shadow: var(--ombre-md);
 }
+.totem-bouton-historique {
+  background: white;
+  border: 2px solid var(--couleur-bordure);
+  color: var(--couleur-teal-700);
+  border-radius: var(--rayon-md);
+  padding: var(--esp-4) var(--esp-6);
+  font-weight: 700;
+  font-size: var(--texte-md);
+  cursor: pointer;
+  box-shadow: var(--ombre-sm);
+  transition: all var(--transition-rapide);
+}
+
+.totem-bouton-historique:hover {
+  border-color: var(--couleur-teal-600);
+  background: var(--couleur-teal-100);
+}

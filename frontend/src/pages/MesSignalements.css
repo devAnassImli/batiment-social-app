@@ -1,0 +1,63 @@
+@import '../styles/design-tokens.css';
+
+.mes-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--esp-5);
+}
+
+.mes-carte {
+  background: white;
+  border-radius: var(--rayon-lg);
+  padding: var(--esp-6);
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--ombre-lg);
+}
+
+.mes-carte h2 {
+  font-family: var(--police-titre);
+  color: var(--couleur-teal-800);
+  font-size: var(--texte-lg);
+  text-align: center;
+  margin-bottom: var(--esp-5);
+}
+
+.mes-vide { color: var(--couleur-texte-att); text-align: center; padding: var(--esp-6) 0; font-style: italic; }
+
+.mes-liste { display: flex; flex-direction: column; gap: var(--esp-3); overflow-y: auto; flex: 1; }
+
+.mes-item {
+  background: #f7f9f9;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-sm);
+  padding: var(--esp-4);
+}
+
+.mes-item-haut { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--esp-2); }
+
+.mes-item-zone { font-weight: 700; color: var(--couleur-teal-800); }
+
+.mes-item-badge { padding: 4px 12px; border-radius: 20px; font-size: var(--texte-xs); font-weight: 700; }
+
+.mes-item-desc { font-size: var(--texte-base); margin-bottom: var(--esp-2); }
+
+.mes-item-bas { display: flex; gap: var(--esp-3); font-size: var(--texte-xs); color: var(--couleur-texte-att); }
+
+.mes-item-urgent { color: var(--couleur-urgence); font-weight: 700; }
+
+.mes-retour {
+  margin-top: var(--esp-5);
+  background: none;
+  border: 2px solid var(--couleur-bordure);
+  color: var(--couleur-texte-att);
+  border-radius: var(--rayon-sm);
+  padding: var(--esp-3) 0;
+  font-weight: 700;
+  cursor: pointer;
+}

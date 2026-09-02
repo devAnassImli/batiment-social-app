@@ -15,3 +15,7 @@ export async function envoyerSignalement(donnees) {
   const resultat = await reponse.json();
   return { ok: reponse.ok, resultat };
 }
+export async function recupererMesSignalements(matricule) {
+  const reponse = await fetch(`${API_BASE_URL}/mes-signalements/${matricule}`);
+  return reponse.json();
+}

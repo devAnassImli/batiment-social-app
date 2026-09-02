@@ -643,6 +643,20 @@ app.get("/api/admin/statistiques", verifierToken, (req, res) => {
     dernieres,
   });
 });
+
+app.get('/api/mes-signalements/:matricule', (req, res) => {
+  const matricule = req.params.matricule.padStart(5, '0').slice(0, 5);
+  const signalements = dbSqlite.prepare(`
+    SELECT s.IdSignalement, s.DateCreation, s.Description, s.Statut, s.Urgence,
+           z.Nom AS ZoneNom, a.Nom AS AvancementNom
+    FROM T_BS_SIGNALEMENTS s
+    LEFT JOIN T_BS_ZONES z ON z.IdZone = s.IdZone
+    LEFT JOIN T_BS_AVANCEMENT a ON a.IdAvancement = s.IdAvancement
+    WHERE TRIM(s.MatriculeDemandeur) = TRIM(?) AND s.Supprime = 0
+    ORDER BY s.IdSignalement DESC
+  `).all(matricule);
+  res.json(signalements);
+});
 // ══════════════════════════════════════════════════════════
 //  CRUD REFERENTIELS (Zones, Categories, Pilotes)
 // ══════════════════════════════════════════════════════════

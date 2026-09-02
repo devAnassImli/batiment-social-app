@@ -107,14 +107,19 @@ export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) 
     centre: { opacity: 1, x: 0 },
     sortie: { opacity: 0, x: -30 },
   };
-
+  const etapeAffichee = () => {
+    if (etape === 1 && !zone) return 1;
+    if (etape === 1 && zone) return 2;
+    if (etape === 2) return 3;
+    return 4;
+  };
   return (
     <main className="signalement-main">
       <div className="signalement-carte">
 
-        <div className="signalement-progression">
-          {[1, 2, 3].map((n) => (
-            <div key={n} className={`signalement-point ${etape >= n ? 'actif' : ''}`} />
+                <div className="signalement-progression">
+          {[1, 2, 3, 4].map((n) => (
+            <div key={n} className={`signalement-point ${etapeAffichee() >= n ? 'actif' : ''}`} />
           ))}
         </div>
 

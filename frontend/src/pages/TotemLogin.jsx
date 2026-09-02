@@ -8,6 +8,7 @@ import planSite from '../assets/plan-site.jpg';
 import numerosUtiles from '../assets/numeros-utiles.jpg';
 import './TotemLogin.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import MesSignalements from './MesSignalements';
 
 const LONGUEUR_MAX = 5;
 
@@ -98,8 +99,12 @@ export default function TotemLogin() {
             </main>
           </motion.div>
         )}
-
-        {vue === 'accueil' && (
+        {vue === 'historique' && (
+          <motion.div key="historique" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+            <MesSignalements employe={employe} onRetour={() => setVue('accueil')} />
+          </motion.div>
+        )}
+              {vue === 'accueil' && (
           <motion.div key="accueil" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
             <main className="totem-accueil">
               <button className="carte-action-principale" onClick={() => setVue('signalement')}>
@@ -109,6 +114,9 @@ export default function TotemLogin() {
                   <p>Décrivez-le en quelques secondes</p>
                 </div>
                 <div className="carte-action-fleche">→</div>
+              </button>
+              <button className="totem-bouton-historique" onClick={() => setVue('historique')}>
+                📋 Mes demandes
               </button>
             </main>
           </motion.div>

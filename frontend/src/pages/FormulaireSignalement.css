@@ -164,12 +164,20 @@
 .signalement-envoyer:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
 .signalement-annuler-global {
-  background: none;
-  border: none;
+  background: white;
+  border: 2px solid var(--couleur-bordure);
   color: var(--couleur-texte-att);
-  font-size: 0.95rem;
+  font-size: var(--texte-base);
+  font-weight: 700;
   cursor: pointer;
-  text-decoration: underline;
+  padding: var(--esp-3) var(--esp-6);
+  border-radius: var(--rayon-sm);
+  transition: all var(--transition-rapide);
+}
+
+.signalement-annuler-global:hover {
+  border-color: var(--couleur-urgence);
+  color: var(--couleur-urgence);
 }
 
 .signalement-annuler-global:hover { color: var(--couleur-urgence); }
