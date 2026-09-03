@@ -151,7 +151,7 @@
 .totem-bouton-valider {
   width: 100%;
   margin-top: 20px;
-  background: linear-gradient(135deg, var(--couleur-teal-600), var(--couleur-teal-800));
+  background: linear-gradient(135deg, #16a34a, #15803d);
   color: white;
   border: none;
   border-radius: var(--rayon-sm);
@@ -162,7 +162,7 @@
   letter-spacing: 0.6px;
   box-shadow: var(--ombre-sm);
 }
-
+.totem-bouton-valider:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 .totem-bouton-valider:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
 .totem-bouton-effacer {

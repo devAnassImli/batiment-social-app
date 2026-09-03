@@ -54,10 +54,14 @@ db.exec(`
     Action TEXT,
     Commentaire TEXT
   );
+    CREATE TABLE IF NOT EXISTS T_BS_ADMINS_TOTEM (
+    Matricule TEXT PRIMARY KEY
+  );
 `);
 
 const zoneExiste = db.prepare('SELECT COUNT(*) AS n FROM T_BS_ZONES').get();
 if (zoneExiste.n === 0) {
+    db.prepare('INSERT OR IGNORE INTO T_BS_ADMINS_TOTEM (Matricule) VALUES (?)').run('05102');
   const insererZone = db.prepare('INSERT INTO T_BS_ZONES (Nom) VALUES (?)');
   ['Infirmerie', 'Casiers', 'Douches', 'Poste de garde', 'Bascule CSE'].forEach(z => insererZone.run(z));
 

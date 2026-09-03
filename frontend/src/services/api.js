@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://10.165.150.21:5000/api';
 
 export async function verifierMatricule(matricule) {
   const reponse = await fetch(`${API_BASE_URL}/employe/${matricule}`);
@@ -17,5 +17,5 @@ export async function envoyerSignalement(donnees) {
 }
 export async function recupererMesSignalements(matricule) {
   const reponse = await fetch(`${API_BASE_URL}/mes-signalements/${matricule}`);
-  return reponse.json();
+  return reponse.json(); // { estAdmin, signalements }
 }

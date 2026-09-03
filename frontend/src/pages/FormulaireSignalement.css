@@ -260,4 +260,4 @@
 }
 
 .signalement-confirmation-non { background: #f1f2f3; color: var(--couleur-texte); }
-.signalement-confirmation-oui { background: var(--couleur-teal-700); color: white; }
+.signalement-confirmation-oui { background: #16a34a; color: white; }

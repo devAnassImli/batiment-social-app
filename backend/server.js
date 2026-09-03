@@ -646,16 +646,29 @@ app.get("/api/admin/statistiques", verifierToken, (req, res) => {
 
 app.get('/api/mes-signalements/:matricule', (req, res) => {
   const matricule = req.params.matricule.padStart(5, '0').slice(0, 5);
-  const signalements = dbSqlite.prepare(`
-    SELECT s.IdSignalement, s.DateCreation, s.Description, s.Statut, s.Urgence,
-           z.Nom AS ZoneNom, a.Nom AS AvancementNom
-    FROM T_BS_SIGNALEMENTS s
-    LEFT JOIN T_BS_ZONES z ON z.IdZone = s.IdZone
-    LEFT JOIN T_BS_AVANCEMENT a ON a.IdAvancement = s.IdAvancement
-    WHERE TRIM(s.MatriculeDemandeur) = TRIM(?) AND s.Supprime = 0
-    ORDER BY s.IdSignalement DESC
-  `).all(matricule);
-  res.json(signalements);
+  const estAdmin = !!dbSqlite.prepare('SELECT 1 FROM T_BS_ADMINS_TOTEM WHERE Matricule = ?').get(matricule);
+
+  const requete = estAdmin
+    ? `SELECT s.IdSignalement, s.DateCreation, s.NomDemandeur, s.Description, s.Statut, s.Urgence,
+              z.Nom AS ZoneNom, a.Nom AS AvancementNom, a.Position AS AvancementPosition
+       FROM T_BS_SIGNALEMENTS s
+       LEFT JOIN T_BS_ZONES z ON z.IdZone = s.IdZone
+       LEFT JOIN T_BS_AVANCEMENT a ON a.IdAvancement = s.IdAvancement
+       WHERE s.Supprime = 0
+       ORDER BY s.IdSignalement DESC`
+    : `SELECT s.IdSignalement, s.DateCreation, s.NomDemandeur, s.Description, s.Statut, s.Urgence,
+              z.Nom AS ZoneNom, a.Nom AS AvancementNom, a.Position AS AvancementPosition
+       FROM T_BS_SIGNALEMENTS s
+       LEFT JOIN T_BS_ZONES z ON z.IdZone = s.IdZone
+       LEFT JOIN T_BS_AVANCEMENT a ON a.IdAvancement = s.IdAvancement
+       WHERE TRIM(s.MatriculeDemandeur) = TRIM(?) AND s.Supprime = 0
+       ORDER BY s.IdSignalement DESC`;
+
+  const signalements = estAdmin
+    ? dbSqlite.prepare(requete).all()
+    : dbSqlite.prepare(requete).all(matricule);
+
+  res.json({ estAdmin, signalements });
 });
 // ══════════════════════════════════════════════════════════
 //  CRUD REFERENTIELS (Zones, Categories, Pilotes)

@@ -17,7 +17,7 @@ export default function AdminLogin() {
     setChargement(true);
     setErreur('');
     try {
-      const reponse = await fetch('http://localhost:5000/api/admin/connexion', {
+      const reponse = await fetch('http://10.165.150.21:5000/api/admin/connexion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifiant, motDePasse }),
