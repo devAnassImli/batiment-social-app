@@ -2,22 +2,23 @@ import { useState, useEffect } from 'react';
 import { verifierMatricule } from '../services/api';
 import Header from '../components/Header';
 import FormulaireSignalement from './FormulaireSignalement';
+import MesSignalements from './MesSignalements';
 import logoRiva from '../assets/logo-riva.png';
 import logoSam from '../assets/logo-sam.png';
 import planSite from '../assets/plan-site.jpg';
 import numerosUtiles from '../assets/numeros-utiles.jpg';
 import './TotemLogin.css';
 import { motion, AnimatePresence } from 'framer-motion';
-import MesSignalements from './MesSignalements';
 
 const LONGUEUR_MAX = 5;
+const MATRICULES_AUTORISES = ['05102', '04575']; // 05102 = Anass, remplace XXXXX par le matricule de Manlio
 
 export default function TotemLogin() {
   const [matricule, setMatricule] = useState('');
   const [erreur, setErreur] = useState('');
   const [chargement, setChargement] = useState(false);
   const [employe, setEmploye] = useState(null);
-  const [vue, setVue] = useState('connexion'); // connexion | accueil | signalement | confirmation
+  const [vue, setVue] = useState('connexion'); // connexion | accueil | signalement | confirmation | historique
   const [imageAffichee, setImageAffichee] = useState(null); // null | 'plan' | 'numeros'
 
   const ajouterChiffre = (chiffre) => {
@@ -41,6 +42,13 @@ export default function TotemLogin() {
     try {
       const { ok, donnees } = await verifierMatricule(matricule);
       if (ok && donnees.trouve) {
+        const matriculeNormalise = matricule.padStart(LONGUEUR_MAX, '0');
+        if (!MATRICULES_AUTORISES.includes(matriculeNormalise)) {
+          setErreur('Application en cours de développement — accès restreint pour le moment');
+          setMatricule('');
+          setChargement(false);
+          return;
+        }
         setEmploye(donnees.employe);
         setVue('accueil');
       } else {
@@ -88,23 +96,25 @@ export default function TotemLogin() {
           </motion.div>
         )}
 
-        {vue === 'confirmation' && (
-          <motion.div key="confirmation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-            <main className="totem-accueil">
-              <div className="totem-confirmation">
-                <span className="totem-confirmation-icone">✅</span>
-                               <h2>Demande d'intervention enregistrée</h2>
-                <p>Merci {employe.Nome}, votre signalement a bien été transmis.</p>
-              </div>
-            </main>
-          </motion.div>
-        )}
         {vue === 'historique' && (
           <motion.div key="historique" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
             <MesSignalements employe={employe} onRetour={() => setVue('accueil')} />
           </motion.div>
         )}
-              {vue === 'accueil' && (
+
+        {vue === 'confirmation' && (
+          <motion.div key="confirmation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+            <main className="totem-accueil">
+              <div className="totem-confirmation">
+                <span className="totem-confirmation-icone">✅</span>
+                <h2>Demande d'intervention enregistrée</h2>
+                <p>Merci {employe.Nome}, votre signalement a bien été transmis.</p>
+              </div>
+            </main>
+          </motion.div>
+        )}
+
+        {vue === 'accueil' && (
           <motion.div key="accueil" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
             <main className="totem-accueil">
               <button className="carte-action-principale" onClick={() => setVue('signalement')}>
@@ -125,6 +135,13 @@ export default function TotemLogin() {
         {vue === 'connexion' && (
           <motion.div key="connexion" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
             <main className="totem-connexion">
+                            <div className="totem-bandeau-dev">
+                <span className="totem-bandeau-dev-icone">🚧</span>
+                <div className="totem-bandeau-dev-texte">
+                  <span className="totem-bandeau-dev-titre">Application en cours de développement</span>
+                  <span className="totem-bandeau-dev-sous">Accès temporairement restreint</span>
+                </div>
+              </div>
               <div className="totem-carte">
                 <p className="totem-bienvenue">Bienvenue — saisissez votre matricule</p>
                 <input className="totem-affichage" value={matricule} readOnly placeholder="•••••" />
@@ -154,7 +171,11 @@ export default function TotemLogin() {
           </motion.div>
         )}
       </AnimatePresence>
-
+      {!employeConnecte && (
+        <footer className="totem-footer-connexion">
+          Système automatique de signalement des pannes (douches, armoires, etc.)
+        </footer>
+      )}
       {imageAffichee && (
         <div className="totem-modale-fond" onClick={() => setImageAffichee(null)}>
           <div className="totem-modale-contenu" onClick={(e) => e.stopPropagation()}>

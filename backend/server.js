@@ -281,8 +281,8 @@ function tryLdapBind(bindDN, password) {
   return new Promise((resolve) => {
     const client = ldap.createClient({
       url: LDAP_URL,
-      timeout: 5000,
-      connectTimeout: 5000,
+      timeout: 5001,
+      connectTimeout: 5001,
     });
     client.on("error", () => resolve(null));
 
@@ -644,9 +644,11 @@ app.get("/api/admin/statistiques", verifierToken, (req, res) => {
   });
 });
 
-app.get('/api/mes-signalements/:matricule', (req, res) => {
-  const matricule = req.params.matricule.padStart(5, '0').slice(0, 5);
-  const estAdmin = !!dbSqlite.prepare('SELECT 1 FROM T_BS_ADMINS_TOTEM WHERE Matricule = ?').get(matricule);
+app.get("/api/mes-signalements/:matricule", (req, res) => {
+  const matricule = req.params.matricule.padStart(5, "0").slice(0, 5);
+  const estAdmin = !!dbSqlite
+    .prepare("SELECT 1 FROM T_BS_ADMINS_TOTEM WHERE Matricule = ?")
+    .get(matricule);
 
   const requete = estAdmin
     ? `SELECT s.IdSignalement, s.DateCreation, s.NomDemandeur, s.Description, s.Statut, s.Urgence,
@@ -760,7 +762,7 @@ app.delete("/api/admin/pilotes/:id", verifierToken, (req, res) => {
     .run(req.params.id);
   res.json({ succes: true });
 });
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Backend demarre sur http://localhost:${PORT}`);
 });

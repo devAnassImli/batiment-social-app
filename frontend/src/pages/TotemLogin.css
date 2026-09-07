@@ -1,3 +1,6 @@
+/* ============================================
+   PAGE APRÈS CONNEXION (accueil, formulaire, confirmation, historique)
+   ============================================ */
 .totem-page {
   min-height: 100vh;
   background-color: var(--couleur-fond);
@@ -9,28 +12,50 @@
   flex-direction: column;
 }
 
-.totem-page-connexion {
-  min-height: 100vh;
-  background:
-    linear-gradient(180deg, rgba(6,54,56,0.15), rgba(6,54,56,0.35) 60%, rgba(6,54,56,0.55)),
-    url('../assets/usine-fond.jpg') center/cover no-repeat;
-  font-family: var(--police);
-  user-select: none;
+.totem-accueil {
+  flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: var(--esp-5);
+  padding: var(--esp-5);
 }
 
+/* ============================================
+   PAGE DE CONNEXION (matricule) — 3 zones : logos / carte / footer
+   ============================================ */
+.totem-page-connexion {
+  min-height: 100vh;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(6,54,56,0.25),
+      rgba(6,54,56,0.40),
+      rgba(6,54,56,0.65)
+    ),
+    url('../assets/usine-fond.jpg') center center/cover no-repeat;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Zone 1 — logos, hauteur fixe en haut */
 .totem-logos-connexion {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 32px;
+
+  width: 100%;
+
+  padding: 10px 50px 0 50px;
+
+  box-sizing: border-box;
 }
 
 .totem-logos-connexion .logo-img {
-  height: 46px;
+  height: 70px;
   width: auto;
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
@@ -38,50 +63,98 @@
 
 .totem-logos-connexion .logo-sam-img {
   background: white;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: var(--esp-2) var(--esp-3);
+  border-radius: var(--rayon-sm);
   box-shadow: var(--ombre-sm);
 }
 
-.totem-connexion, .totem-accueil {
+/* Zone 2 — contenu central, prend tout l'espace restant */
+.totem-connexion {
   flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: 20px;
+
+  margin-top: -60px;
+}
+
+.totem-bandeau-dev {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border: 2px solid #d97706;
+  border-radius: var(--rayon-md);
+  padding: var(--esp-4) var(--esp-5);
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 28px;
-  padding: 20px;
+  gap: var(--esp-3);
+  box-shadow: var(--ombre-md);
+  width: 100%;
+  max-width: 380px;
+  box-sizing: border-box;
+}
+
+.totem-bandeau-dev-icone { font-size: 1.7rem; flex-shrink: 0; }
+
+.totem-bandeau-dev-texte { display: flex; flex-direction: column; gap: 2px; }
+
+.totem-bandeau-dev-titre {
+  color: #92400e;
+  font-weight: 800;
+  font-size: var(--texte-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  line-height: 1.3;
+}
+
+.totem-bandeau-dev-sous {
+  color: #78350f;
+  font-size: var(--texte-xs);
+  font-weight: 500;
 }
 
 .totem-carte {
-  background: rgba(255,255,255,0.94);
-  backdrop-filter: blur(12px);
-  border-radius: var(--rayon-lg);
-  padding: 36px;
-  width: 380px;
-  box-shadow: var(--ombre-lg);
-  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.95);
+
+  backdrop-filter: blur(20px);
+
+  border-radius: 24px;
+
+  padding: 35px;
+
+  width: 100%;
+  max-width: 430px;
+
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.22),
+    0 8px 20px rgba(0,0,0,0.12);
+
+  border: 1px solid rgba(255,255,255,0.7);
 }
 
 .totem-bienvenue {
   text-align: center;
   color: var(--couleur-texte-att);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--texte-sm);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 12px;
+  margin-bottom: var(--esp-3);
 }
 
 .totem-affichage {
   width: 100%;
+  box-sizing: border-box;
   font-size: 1.7rem;
   font-weight: 700;
   text-align: center;
   border: 2px solid var(--couleur-bordure);
   border-radius: var(--rayon-sm);
-  padding: 16px;
-  margin-bottom: 22px;
+  padding: var(--esp-4);
+  margin-bottom: var(--esp-5);
   letter-spacing: 6px;
   color: var(--couleur-teal-800);
   background: var(--couleur-teal-100);
@@ -90,8 +163,8 @@
 .totem-pave-3x3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-4);
 }
 
 .totem-touche {
@@ -100,7 +173,7 @@
   border-radius: var(--rayon-sm);
   font-size: 1.9rem;
   font-weight: 700;
-  padding: 24px 0;
+  padding: var(--esp-5) 0;
   cursor: pointer;
   color: var(--couleur-texte);
   transition: all var(--transition-rapide);
@@ -118,9 +191,9 @@
 .totem-barre-basse {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
+  gap: var(--esp-3);
   align-items: stretch;
-  margin-bottom: 18px;
+  margin-bottom: var(--esp-4);
 }
 
 .totem-touche-zero { font-size: 1.9rem; }
@@ -134,7 +207,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  font-size: 0.78rem;
+  font-size: var(--texte-xs);
   font-weight: 700;
   color: var(--couleur-texte-att);
   cursor: pointer;
@@ -150,30 +223,30 @@
 
 .totem-bouton-valider {
   width: 100%;
-  margin-top: 20px;
+  margin-top: var(--esp-4);
   background: linear-gradient(135deg, #16a34a, #15803d);
   color: white;
   border: none;
   border-radius: var(--rayon-sm);
-  padding: 19px 0;
+  padding: var(--esp-4) 0;
   font-size: 1.15rem;
   font-weight: 700;
   cursor: pointer;
   letter-spacing: 0.6px;
   box-shadow: var(--ombre-sm);
 }
-.totem-bouton-valider:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
 .totem-bouton-valider:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
 .totem-bouton-effacer {
   width: 100%;
-  margin-top: 12px;
+  margin-top: var(--esp-3);
   background: none;
   border: none;
   color: var(--couleur-texte-att);
-  font-size: 0.92rem;
+  font-size: var(--texte-sm);
   font-weight: 600;
-  padding: 8px 0;
+  padding: var(--esp-2) 0;
   cursor: pointer;
 }
 
@@ -182,24 +255,39 @@
 .totem-erreur {
   color: var(--couleur-urgence);
   text-align: center;
-  margin-top: 16px;
+  margin-top: var(--esp-4);
   font-weight: 600;
   background: var(--couleur-urgence-fond);
-  padding: 10px;
+  padding: var(--esp-3);
   border-radius: var(--rayon-sm);
 }
 
+/* Zone 3 — footer, hauteur fixe en bas */
+
+.totem-footer-connexion {
+  flex: 0 0 auto;
+  text-align: center;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-style: italic;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  padding: 20px;
+}
+/* ============================================
+   ÉCRAN D'ACCUEIL (après connexion)
+   ============================================ */
 .carte-action-principale {
   background: linear-gradient(135deg, var(--couleur-teal-600), var(--couleur-teal-900));
   color: white;
   border: none;
   border-radius: var(--rayon-lg);
-  padding: 38px 46px;
+  padding: var(--esp-7) var(--esp-6);
   width: 100%;
   max-width: 480px;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: var(--esp-5);
   cursor: pointer;
   box-shadow: var(--ombre-lg);
 }
@@ -210,27 +298,51 @@
 
 .carte-action-texte { flex: 1; text-align: left; }
 
-.carte-action-texte h2 { margin: 0 0 4px 0; font-size: 1.45rem; font-weight: 800; }
+.carte-action-texte h2 { margin: 0 0 4px 0; font-size: var(--texte-lg); font-weight: 800; }
 
-.carte-action-texte p { margin: 0; font-size: 0.92rem; color: var(--couleur-or-clair); font-weight: 400; }
+.carte-action-texte p { margin: 0; font-size: var(--texte-sm); color: var(--couleur-or-clair); font-weight: 400; }
 
 .carte-action-fleche { font-size: 1.7rem; opacity: 0.85; }
 
+.totem-bouton-historique {
+  background: white;
+  border: 2px solid var(--couleur-bordure);
+  color: var(--couleur-teal-700);
+  border-radius: var(--rayon-md);
+  padding: var(--esp-4) var(--esp-6);
+  font-weight: 700;
+  font-size: var(--texte-md);
+  cursor: pointer;
+  box-shadow: var(--ombre-sm);
+  transition: all var(--transition-rapide);
+}
+
+.totem-bouton-historique:hover {
+  border-color: var(--couleur-teal-600);
+  background: var(--couleur-teal-100);
+}
+
+/* ============================================
+   ÉCRAN DE CONFIRMATION
+   ============================================ */
 .totem-confirmation {
   background: var(--couleur-surface);
   border-radius: var(--rayon-lg);
-  padding: 44px 64px;
+  padding: var(--esp-7) var(--esp-8);
   text-align: center;
   box-shadow: var(--ombre-lg);
   border-top: 4px solid var(--couleur-succes);
 }
 
-.totem-confirmation-icone { font-size: 3.2rem; display: block; margin-bottom: 14px; }
+.totem-confirmation-icone { font-size: 3.2rem; display: block; margin-bottom: var(--esp-4); }
 
-.totem-confirmation h2 { margin-bottom: 8px; font-size: 1.5rem; }
+.totem-confirmation h2 { margin-bottom: var(--esp-2); font-size: var(--texte-lg); }
 
-.totem-confirmation p { color: var(--couleur-texte-att); font-size: 1.05rem; }
+.totem-confirmation p { color: var(--couleur-texte-att); font-size: var(--texte-base); }
 
+/* ============================================
+   MODALE PLAN DU SITE / NUMÉROS UTILES
+   ============================================ */
 .totem-modale-fond {
   position: fixed;
   inset: 0;
@@ -245,7 +357,7 @@
 .totem-modale-contenu {
   background: white;
   border-radius: var(--rayon-lg);
-  padding: 20px;
+  padding: var(--esp-5);
   max-width: 85vw;
   max-height: 85vh;
   position: relative;
@@ -273,21 +385,4 @@
   font-weight: 700;
   cursor: pointer;
   box-shadow: var(--ombre-md);
-}
-.totem-bouton-historique {
-  background: white;
-  border: 2px solid var(--couleur-bordure);
-  color: var(--couleur-teal-700);
-  border-radius: var(--rayon-md);
-  padding: var(--esp-4) var(--esp-6);
-  font-weight: 700;
-  font-size: var(--texte-md);
-  cursor: pointer;
-  box-shadow: var(--ombre-sm);
-  transition: all var(--transition-rapide);
-}
-
-.totem-bouton-historique:hover {
-  border-color: var(--couleur-teal-600);
-  background: var(--couleur-teal-100);
 }
