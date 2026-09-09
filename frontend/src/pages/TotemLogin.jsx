@@ -5,21 +5,26 @@ import FormulaireSignalement from './FormulaireSignalement';
 import MesSignalements from './MesSignalements';
 import logoRiva from '../assets/logo-riva.png';
 import logoSam from '../assets/logo-sam.png';
+import iconePlan from '../assets/icone-plan.png';
+import iconeNumeros from '../assets/icone-numeros.png';
 import planSite from '../assets/plan-site.jpg';
 import numerosUtiles from '../assets/numeros-utiles.jpg';
 import './TotemLogin.css';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LONGUEUR_MAX = 5;
-const MATRICULES_AUTORISES = ['05102', '04575']; // 05102 = Anass, remplace XXXXX par le matricule de Manlio
+const MATRICULES_AUTORISES = ['05102', '04575', '04227', '03933'];
 
 export default function TotemLogin() {
   const [matricule, setMatricule] = useState('');
   const [erreur, setErreur] = useState('');
   const [chargement, setChargement] = useState(false);
   const [employe, setEmploye] = useState(null);
-  const [vue, setVue] = useState('connexion'); // connexion | accueil | signalement | confirmation | historique
-  const [imageAffichee, setImageAffichee] = useState(null); // null | 'plan' | 'numeros'
+  const [vue, setVue] = useState('connexion');
+  const [imageAffichee, setImageAffichee] = useState(null);
+  const [secondesRestantes, setSecondesRestantes] = useState(120);
+
+  const employeConnecte = vue !== 'connexion';
 
   const ajouterChiffre = (chiffre) => {
     if (matricule.length < LONGUEUR_MAX) {
@@ -73,11 +78,34 @@ export default function TotemLogin() {
     return () => window.removeEventListener('keydown', gererTouche);
   });
 
-  const employeConnecte = vue !== 'connexion';
+  useEffect(() => {
+    if (!employeConnecte) return;
+    setSecondesRestantes(120);
+
+    const remettreAZero = () => setSecondesRestantes(120);
+    window.addEventListener('click', remettreAZero);
+
+    const intervalle = setInterval(() => {
+      setSecondesRestantes((s) => {
+        if (s <= 1) {
+          reset();
+          return 120;
+        }
+        return s - 1;
+      });
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('click', remettreAZero);
+      clearInterval(intervalle);
+    };
+  }, [employeConnecte]);
 
   return (
     <div className={employeConnecte ? 'totem-page' : 'totem-page-connexion'}>
-      {employeConnecte && <Header utilisateur={employe} onDeconnexion={reset} />}
+      {employeConnecte && (
+        <Header utilisateur={employe} onDeconnexion={reset} secondesRestantes={secondesRestantes} />
+      )}
       {!employeConnecte && (
         <div className="totem-logos-connexion">
           <img src={logoRiva} alt="RIVA" className="logo-img" />
@@ -109,6 +137,9 @@ export default function TotemLogin() {
                 <span className="totem-confirmation-icone">✅</span>
                 <h2>Demande d'intervention enregistrée</h2>
                 <p>Merci {employe.Nome}, votre signalement a bien été transmis.</p>
+                <button className="totem-confirmation-bouton" onClick={() => setVue('accueil')}>
+                  Retour à l'accueil
+                </button>
               </div>
             </main>
           </motion.div>
@@ -135,7 +166,7 @@ export default function TotemLogin() {
         {vue === 'connexion' && (
           <motion.div key="connexion" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
             <main className="totem-connexion">
-                            <div className="totem-bandeau-dev">
+              <div className="totem-bandeau-dev">
                 <span className="totem-bandeau-dev-icone">🚧</span>
                 <div className="totem-bandeau-dev-texte">
                   <span className="totem-bandeau-dev-titre">Application en cours de développement</span>
@@ -152,12 +183,12 @@ export default function TotemLogin() {
                 </div>
                 <div className="totem-barre-basse">
                   <button className="totem-raccourci-bas" onClick={() => setImageAffichee('plan')}>
-                    <span className="totem-raccourci-bas-icone">🗺️</span>
+                    <img src={iconePlan} alt="" className="totem-raccourci-icone-img" />
                     Plan du site
                   </button>
                   <button className="totem-touche totem-touche-zero" onClick={() => ajouterChiffre('0')}>0</button>
                   <button className="totem-raccourci-bas" onClick={() => setImageAffichee('numeros')}>
-                    <span className="totem-raccourci-bas-icone">☎️</span>
+                    <img src={iconeNumeros} alt="" className="totem-raccourci-icone-img" />
                     Numéros utiles
                   </button>
                 </div>
@@ -167,23 +198,19 @@ export default function TotemLogin() {
                 <button className="totem-bouton-effacer" onClick={reset}>Effacer</button>
                 {erreur && <p className="totem-erreur">{erreur}</p>}
               </div>
+              <footer className="totem-footer-connexion">
+                Système automatique de signalement des pannes (douches, armoires, etc.)
+              </footer>
             </main>
           </motion.div>
         )}
       </AnimatePresence>
-      {!employeConnecte && (
-        <footer className="totem-footer-connexion">
-          Système automatique de signalement des pannes (douches, armoires, etc.)
-        </footer>
-      )}
+
       {imageAffichee && (
         <div className="totem-modale-fond" onClick={() => setImageAffichee(null)}>
           <div className="totem-modale-contenu" onClick={(e) => e.stopPropagation()}>
             <button className="totem-modale-fermer" onClick={() => setImageAffichee(null)}>✕</button>
-            <img
-              src={imageAffichee === 'plan' ? planSite : numerosUtiles}
-              alt={imageAffichee === 'plan' ? 'Plan du site' : 'Numéros utiles'}
-            />
+            <img src={imageAffichee === 'plan' ? planSite : numerosUtiles} alt="" />
           </div>
         </div>
       )}

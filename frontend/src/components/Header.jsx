@@ -3,7 +3,7 @@ import logoRiva from '../assets/logo-riva.png';
 import logoSam from '../assets/logo-sam.png';
 import './Header.css';
 
-export default function Header({ utilisateur, onDeconnexion }) {
+export default function Header({ utilisateur, onDeconnexion, secondesRestantes }) {
   const [heure, setHeure] = useState(new Date());
 
   useEffect(() => {
@@ -15,12 +15,18 @@ export default function Header({ utilisateur, onDeconnexion }) {
     weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
   });
   const heureFormatee = heure.toLocaleTimeString('fr-FR');
+  const alerte = secondesRestantes != null && secondesRestantes <= 20;
 
   return (
     <header className="app-header">
       <div className="app-header-gauche">
         <span className="app-header-date">{dateFormatee}</span>
         <span className="app-header-heure">{heureFormatee}</span>
+        {secondesRestantes != null && (
+          <span className={`app-header-timer ${alerte ? 'app-header-timer-alerte' : ''}`}>
+            ⏱ {secondesRestantes}s
+          </span>
+        )}
       </div>
 
       <div className="app-header-centre">
@@ -35,12 +41,8 @@ export default function Header({ utilisateur, onDeconnexion }) {
       <div className="app-header-droite">
         {utilisateur && (
           <>
-            <span className="app-header-utilisateur">
-              {utilisateur.Nome} {utilisateur.Cognome}
-            </span>
-            <button className="app-header-deconnexion" onClick={onDeconnexion}>
-              Déconnexion
-            </button>
+            <span className="app-header-utilisateur">{utilisateur.Nome} {utilisateur.Cognome}</span>
+            <button className="app-header-deconnexion" onClick={onDeconnexion}>Déconnexion</button>
           </>
         )}
       </div>

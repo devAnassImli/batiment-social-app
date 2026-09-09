@@ -13,51 +13,317 @@
   border-radius: var(--rayon-lg);
   padding: var(--esp-6);
   width: 100%;
-  max-width: 560px;
-  max-height: 80vh;
+  max-width: 720px;
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
   box-shadow: var(--ombre-lg);
 }
 
-.mes-carte h2 {
-  font-family: var(--police-titre);
-  color: var(--couleur-teal-800);
-  font-size: var(--texte-lg);
-  text-align: center;
+.mes-entete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-3);
   margin-bottom: var(--esp-5);
 }
 
-.mes-vide { color: var(--couleur-texte-att); text-align: center; padding: var(--esp-6) 0; font-style: italic; }
+.mes-entete h2 {
+  font-family: var(--police-titre);
+  color: var(--couleur-teal-800);
+  font-size: var(--texte-lg);
+}
 
-.mes-liste { display: flex; flex-direction: column; gap: var(--esp-3); overflow-y: auto; flex: 1; }
+.mes-badge-admin {
+  background: var(--couleur-urgence);
+  color: white;
+  font-size: var(--texte-xs);
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
 
-.mes-item {
+.mes-vide {
+  color: var(--couleur-texte-att);
+  text-align: center;
+  padding: var(--esp-6) 0;
+  font-style: italic;
+}
+
+.mes-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-3);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.mes-carte-demande {
   background: #f7f9f9;
   border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-md);
+  padding: var(--esp-4);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-4);
+}
+
+.mes-sel {
+  background: #fde047;
+  border: 1px solid #ca8a04;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-weight: 800;
+  font-size: var(--texte-xs);
+  cursor: pointer;
+  color: #422006;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.mes-carte-contenu { flex: 1; min-width: 0; }
+
+.mes-carte-ligne1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--esp-2);
+}
+
+.mes-carte-numero {
+  font-weight: 700;
+  color: var(--couleur-teal-800);
+  font-size: var(--texte-sm);
+}
+
+.mes-badge-statut {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: var(--texte-xs);
+}
+
+.mes-carte-objet {
+  font-size: var(--texte-base);
+  font-weight: 600;
+  color: var(--couleur-texte);
+  margin-bottom: var(--esp-2);
+}
+
+.mes-carte-ligne3 {
+  display: flex;
+  gap: var(--esp-3);
+  font-size: var(--texte-xs);
+  color: var(--couleur-texte-att);
+}
+
+.mes-carte-demandeur { font-weight: 700; color: var(--couleur-teal-700); }
+
+.mes-retour {
+  margin-top: var(--esp-5);
+  background: var(--couleur-teal-700);
+  color: white;
+  border: none;
+  border-radius: var(--rayon-md);
+  padding: var(--esp-4) var(--esp-5);
+  font-weight: 700;
+  font-size: var(--texte-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-2);
+  box-shadow: var(--ombre-sm);
+}
+
+.mes-retour-fleche { font-size: var(--texte-md); }
+
+.mes-detail-fond {
+  position: fixed;
+  inset: 0;
+  background: rgba(6,54,56,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--esp-6);
+  box-sizing: border-box;
+  z-index: 400;
+}
+
+.mes-detail-boite {
+  background: white;
+  border-radius: var(--rayon-lg);
+  padding: var(--esp-6);
+  width: 600px;
+  max-width: 92vw;
+  max-height: 84vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.mes-detail-fermer {
+  position: absolute;
+  top: var(--esp-3);
+  right: var(--esp-3);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--couleur-urgence);
+  color: white;
+  border: none;
+  font-weight: 700;
+  font-size: var(--texte-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.mes-detail-boite h3 { color: var(--couleur-teal-800); margin-bottom: var(--esp-3); }
+
+.mes-detail-statut {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: var(--texte-sm);
+  margin-bottom: var(--esp-4);
+}
+
+.mes-detail-boite dl { display: grid; grid-template-columns: 100px 1fr; gap: var(--esp-2) var(--esp-3); }
+
+.mes-detail-boite dt { color: var(--couleur-texte-att); font-weight: 700; font-size: var(--texte-xs); }
+
+.mes-detail-boite dd { font-size: var(--texte-sm); }
+
+.mes-detail-commentaire {
+  margin-top: var(--esp-4);
+  background: var(--couleur-teal-100);
   border-radius: var(--rayon-sm);
   padding: var(--esp-4);
 }
 
-.mes-item-haut { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--esp-2); }
+.mes-detail-commentaire-label {
+  display: block;
+  font-weight: 700;
+  font-size: var(--texte-xs);
+  color: var(--couleur-teal-800);
+  text-transform: uppercase;
+  margin-bottom: var(--esp-2);
+}
 
-.mes-item-zone { font-weight: 700; color: var(--couleur-teal-800); }
+.mes-detail-commentaire p {
+  font-size: var(--texte-sm);
+  color: var(--couleur-texte);
+  line-height: 1.5;
+  word-break: break-word;
+}
 
-.mes-item-badge { padding: 4px 12px; border-radius: 20px; font-size: var(--texte-xs); font-weight: 700; }
+.mes-filtres {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  justify-content: center;
+  margin-bottom: var(--esp-4);
+  font-size: var(--texte-sm);
+}
+.mes-filtres input { padding: var(--esp-2); border: 1px solid var(--couleur-bordure); border-radius: var(--rayon-sm); }
+.mes-filtres button { background: #f1f2f3; border: none; border-radius: var(--rayon-sm); padding: var(--esp-2) var(--esp-3); cursor: pointer; }
 
-.mes-item-desc { font-size: var(--texte-base); margin-bottom: var(--esp-2); }
 
-.mes-item-bas { display: flex; gap: var(--esp-3); font-size: var(--texte-xs); color: var(--couleur-texte-att); }
+.mes-filtres button {
+  background: var(--couleur-teal-100);
+  color: var(--couleur-teal-800);
+  border: none;
+  border-radius: var(--rayon-sm);
+  padding: var(--esp-2) var(--esp-3);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: var(--texte-xs);
+}
 
-.mes-item-urgent { color: var(--couleur-urgence); font-weight: 700; }
-
-.mes-retour {
+.mes-detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
   margin-top: var(--esp-5);
-  background: none;
-  border: 2px solid var(--couleur-bordure);
+}
+.mes-detail-valider,.mes-detail-modifier, .mes-detail-supprimer {
+  flex: 1;
+  border: none;
+  border-radius: var(--rayon-sm);
+  padding: var(--esp-3) 0;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: var(--texte-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-2);
+  min-height: 46px;
+  box-sizing: border-box;
+}
+
+.mes-detail-modifier { background: var(--couleur-teal-700); color: white; }
+.mes-detail-supprimer { background: var(--couleur-urgence); color: white; }
+
+
+.mes-confirmation-fond {
+  position: fixed;
+  inset: 0;
+  background: rgba(6,54,56,0.75);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: var(--esp-5);
+  box-sizing: border-box;
+}
+
+.mes-confirmation-boite {
+  background: white;
+  border-radius: var(--rayon-lg);
+  padding: var(--esp-6);
+  width: 380px;
+  max-width: 100%;
+  text-align: center;
+  box-shadow: var(--ombre-lg);
+}
+
+.mes-confirmation-icone {
+  font-size: 2.4rem;
+  display: block;
+  margin-bottom: var(--esp-3);
+}
+
+.mes-confirmation-boite h3 {
+  color: var(--couleur-teal-800);
+  font-size: var(--texte-lg);
+  margin-bottom: var(--esp-2);
+}
+
+.mes-confirmation-boite p {
   color: var(--couleur-texte-att);
+  font-size: var(--texte-sm);
+  margin-bottom: var(--esp-5);
+}
+
+.mes-confirmation-boutons {
+  display: flex;
+  gap: var(--esp-3);
+}
+
+.mes-confirmation-non, .mes-confirmation-oui {
+  flex: 1;
+  border: none;
   border-radius: var(--rayon-sm);
   padding: var(--esp-3) 0;
   font-weight: 700;
   cursor: pointer;
 }
+
+.mes-confirmation-non { background: #f1f2f3; color: var(--couleur-texte); }
+.mes-confirmation-oui { background: var(--couleur-urgence); color: white; }
+.mes-detail-valider { background: #16a34a; color: white; }

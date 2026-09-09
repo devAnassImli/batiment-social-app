@@ -4,9 +4,10 @@ require("dotenv").config();
 const sql = require("mssql");
 const ldap = require("ldapjs");
 const jwt = require("jsonwebtoken");
-const dbSqlite = require("./db-sqlite");
+const dbSql = require("./db-sqlserver");
 const PDFDocument = require("pdfkit");
-
+const MATRICULES_ADMIN = ["05102", "04227", "03933", "04575"]; // Anass, Adrien, Sebastien — ajoute le tuteur et le directeur ici plus tard
+const cron = require("node-cron");
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -15,25 +16,32 @@ app.use(express.json());
 //  CONFIG SQL SERVER (base employes, lecture seule)
 // ══════════════════════════════════════════════════════════
 const configEmployes = {
-  server: process.env.DB_SERVER.split("\\")[0],
+  server: process.env.DB_EMPLOYEES_SERVER.split("\\")[0],
   port: 1433,
   database: process.env.DB_EMPLOYEES_DATABASE,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  user: process.env.DB_EMPLOYEES_USER,
+  password: process.env.DB_EMPLOYEES_PASSWORD,
   options: {
-    instanceName: process.env.DB_SERVER.split("\\")[1],
+    instanceName: process.env.DB_EMPLOYEES_SERVER.split("\\")[1],
     encrypt: false,
     trustServerCertificate: true,
   },
 };
-
+let poolEmployesPromise = null;
+function getPoolEmployes() {
+  if (!poolEmployesPromise) {
+    const pool = new sql.ConnectionPool(configEmployes);
+    poolEmployesPromise = pool.connect();
+  }
+  return poolEmployesPromise;
+}
 app.get("/api/test", (req, res) => {
   res.json({ message: "Le backend fonctionne !" });
 });
 
 app.get("/api/test-db", async (req, res) => {
   try {
-    await sql.connect(configEmployes);
+    await getPoolEmployes();
     res.json({ connexion: "OK", base: process.env.DB_EMPLOYEES_DATABASE });
   } catch (err) {
     res.status(500).json({ erreur: err.message });
@@ -44,7 +52,7 @@ app.get("/api/employe/:matricule", async (req, res) => {
   const matriculeBrut = req.params.matricule;
   const matricule = matriculeBrut.padStart(5, "0").slice(0, 5);
   try {
-    const pool = await sql.connect(configEmployes);
+    const pool = await getPoolEmployes();
     const resultat = await pool
       .request()
       .input("Matricola", sql.NChar(5), matricule)
@@ -70,57 +78,28 @@ app.get("/api/test-sqlite", (req, res) => {
   res.json(zones);
 });
 
-app.post("/api/signalements", (req, res) => {
+app.post("/api/signalements", async (req, res) => {
   const { matricule, nomDemandeur, zone, categorie, urgence, description } =
     req.body;
-  if (!matricule || !zone || !categorie || !urgence || !description) {
+  if (!matricule || !zone || !categorie || !urgence) {
     return res.status(400).json({ erreur: "Champs manquants" });
   }
   try {
-    const idZone = dbSqlite
-      .prepare("SELECT IdZone FROM T_BS_ZONES WHERE Nom = ?")
-      .get(zone)?.IdZone;
-    const idCategorie = dbSqlite
-      .prepare("SELECT IdCategorie FROM T_BS_CATEGORIES WHERE Nom = ?")
-      .get(categorie)?.IdCategorie;
-    const idAvancementInitial = dbSqlite
-      .prepare("SELECT IdAvancement FROM T_BS_AVANCEMENT WHERE Position = 1")
-      .get()?.IdAvancement;
-
-    if (!idZone || !idCategorie) {
-      return res.status(400).json({ erreur: "Zone ou catégorie invalide" });
-    }
-
-    const resultat = dbSqlite
-      .prepare(
-        `
-      INSERT INTO T_BS_SIGNALEMENTS
-        (MatriculeDemandeur, NomDemandeur, IdZone, IdCategorie, Urgence, Description, Statut, IdAvancement)
-      VALUES (?, ?, ?, ?, ?, ?, 'A_VALIDER', ?)
-    `,
-      )
-      .run(
-        matricule,
-        nomDemandeur,
-        idZone,
-        idCategorie,
-        urgence,
-        description,
-        idAvancementInitial,
-      );
-
-    dbSqlite
-      .prepare(
-        `
-      INSERT INTO T_BS_HISTORIQUE (IdSignalement, Auteur, Action, Commentaire)
-      VALUES (?, ?, 'Création', 'Signalement créé depuis le totem')
-    `,
-      )
-      .run(resultat.lastInsertRowid, nomDemandeur);
-
-    res.json({ succes: true, idSignalement: resultat.lastInsertRowid });
+    const resultat = await dbSql.creerDemande({
+      nomDemandeur,
+      matriculeDemandeur: matricule,
+      zone,
+      categorie,
+      urgence,
+      description,
+    });
+    res.json({
+      succes: true,
+      idSignalement: resultat.idDomanda,
+      numero: `${resultat.numero}/${resultat.annee}`,
+    });
   } catch (err) {
-    console.error("Erreur sauvegarde signalement :", err.message);
+    console.error("Erreur creation demande SQL Server :", err.message);
     res.status(500).json({ erreur: err.message });
   }
 });
@@ -270,7 +249,50 @@ app.get("/api/signalements/:id/pdf", verifierToken, (req, res) => {
 
   doc.end();
 });
+app.delete("/api/mes-signalements/:id", async (req, res) => {
+  const { id } = req.params;
+  const { matricule } = req.body;
+  const matriculeFormate = (matricule || "").padStart(5, "0").slice(0, 5);
+  const estAdmin = MATRICULES_ADMIN.includes(matriculeFormate);
 
+  try {
+    await dbSql.supprimerDemande(Number(id), matriculeFormate, estAdmin);
+    res.json({ succes: true });
+  } catch (err) {
+    res.status(403).json({ succes: false, message: err.message });
+  }
+});
+
+app.put('/api/mes-signalements/:id', async (req, res) => {
+  const { id } = req.params;
+  const { matricule, description } = req.body;
+  const matriculeFormate = (matricule || '').padStart(5, '0').slice(0, 5);
+  const estAdmin = MATRICULES_ADMIN.includes(matriculeFormate);
+
+  try {
+    await dbSql.modifierDemande(Number(id), matriculeFormate, estAdmin, { description });
+    res.json({ succes: true });
+  } catch (err) {
+    res.status(403).json({ succes: false, message: err.message });
+  }
+});
+
+app.post('/api/mes-signalements/:id/valider', async (req, res) => {
+  const { id } = req.params;
+  const { matricule } = req.body;
+  const matriculeFormate = (matricule || '').padStart(5, '0').slice(0, 5);
+
+  if (!MATRICULES_ADMIN.includes(matriculeFormate)) {
+    return res.status(403).json({ succes: false, message: 'Seuls les administrateurs peuvent valider' });
+  }
+
+  try {
+    await dbSql.validerDemande(Number(id), matriculeFormate);
+    res.json({ succes: true });
+  } catch (err) {
+    res.status(500).json({ succes: false, message: err.message });
+  }
+});
 // ══════════════════════════════════════════════════════════
 //  AUTHENTIFICATION LDAP + JWT (back-office)
 // ══════════════════════════════════════════════════════════
@@ -643,35 +665,37 @@ app.get("/api/admin/statistiques", verifierToken, (req, res) => {
     dernieres,
   });
 });
-
-app.get("/api/mes-signalements/:matricule", (req, res) => {
+app.get("/api/mes-signalements/:matricule", async (req, res) => {
   const matricule = req.params.matricule.padStart(5, "0").slice(0, 5);
-  const estAdmin = !!dbSqlite
-    .prepare("SELECT 1 FROM T_BS_ADMINS_TOTEM WHERE Matricule = ?")
-    .get(matricule);
+  const estAdmin = MATRICULES_ADMIN.includes(matricule);
+  const { dateDebut, dateFin } = req.query;
 
-  const requete = estAdmin
-    ? `SELECT s.IdSignalement, s.DateCreation, s.NomDemandeur, s.Description, s.Statut, s.Urgence,
-              z.Nom AS ZoneNom, a.Nom AS AvancementNom, a.Position AS AvancementPosition
-       FROM T_BS_SIGNALEMENTS s
-       LEFT JOIN T_BS_ZONES z ON z.IdZone = s.IdZone
-       LEFT JOIN T_BS_AVANCEMENT a ON a.IdAvancement = s.IdAvancement
-       WHERE s.Supprime = 0
-       ORDER BY s.IdSignalement DESC`
-    : `SELECT s.IdSignalement, s.DateCreation, s.NomDemandeur, s.Description, s.Statut, s.Urgence,
-              z.Nom AS ZoneNom, a.Nom AS AvancementNom, a.Position AS AvancementPosition
-       FROM T_BS_SIGNALEMENTS s
-       LEFT JOIN T_BS_ZONES z ON z.IdZone = s.IdZone
-       LEFT JOIN T_BS_AVANCEMENT a ON a.IdAvancement = s.IdAvancement
-       WHERE TRIM(s.MatriculeDemandeur) = TRIM(?) AND s.Supprime = 0
-       ORDER BY s.IdSignalement DESC`;
-
-  const signalements = estAdmin
-    ? dbSqlite.prepare(requete).all()
-    : dbSqlite.prepare(requete).all(matricule);
-
-  res.json({ estAdmin, signalements });
+  try {
+    const signalements = await dbSql.listerDemandes({
+      matricule,
+      tousLesUtilisateurs: estAdmin,
+      dateDebut,
+      dateFin,
+    });
+    res.json({
+      estAdmin,
+      signalements: signalements.map((s) => ({
+        IdSignalement: s.IdDomanda,
+        DateCreation: s.DataDomanda,
+        NomDemandeur: s.Richiedente,
+        Description: s.Oggetto,
+        DescriptionComplete: s.Descrittivo,
+        Statut: s.Validata ? "VALIDE" : "A_VALIDER",
+        AvancementNom: s.AvanzamentoNome,
+        ZoneNom: (s.Oggetto || "").split(" — ")[0],
+      })),
+    });
+  } catch (err) {
+    console.error("Erreur liste demandes :", err.message);
+    res.status(500).json({ erreur: err.message });
+  }
 });
+
 // ══════════════════════════════════════════════════════════
 //  CRUD REFERENTIELS (Zones, Categories, Pilotes)
 // ══════════════════════════════════════════════════════════
@@ -763,6 +787,13 @@ app.delete("/api/admin/pilotes/:id", verifierToken, (req, res) => {
   res.json({ succes: true });
 });
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
+
+// Nettoyage automatique tous les jours a 3h du matin
+cron.schedule("0 3 * * *", () => {
+  dbSql
+    .nettoyerAncienneDemandes()
+    .catch((err) => console.error("Erreur nettoyage auto :", err.message));
+});
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Backend demarre sur http://localhost:${PORT}`);
 });

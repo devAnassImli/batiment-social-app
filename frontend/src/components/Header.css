@@ -1,3 +1,5 @@
+@import '../styles/design-tokens.css';
+
 .app-header {
   width: 100%;
   background: linear-gradient(180deg, var(--couleur-teal-700), var(--couleur-teal-800));
@@ -5,7 +7,7 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 20px 40px;
+  padding: var(--esp-4) var(--esp-6);
   box-sizing: border-box;
   box-shadow: var(--ombre-md);
   font-family: var(--police);
@@ -14,44 +16,74 @@
 .app-header-gauche {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 1.05rem;
-  color: var(--couleur-or-clair);
+  gap: var(--esp-1);
+  align-items: flex-start;
 }
 
-.app-header-date { text-transform: capitalize; }
+.app-header-date {
+  color: var(--couleur-or-clair);
+  font-size: var(--texte-sm);
+  text-transform: capitalize;
+}
 
 .app-header-heure {
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
   color: white;
-  font-size: 1.15rem;
+  font-weight: 700;
+  font-size: var(--texte-md);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-header-timer {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: var(--texte-sm);
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  width: fit-content;
+  margin-top: var(--esp-1);
+}
+
+.app-header-timer-alerte {
+  background: var(--couleur-urgence);
+  animation: clignoter 1s infinite;
+}
+
+@keyframes clignoter {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .app-header-centre {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: var(--esp-4);
   justify-content: center;
 }
 
-.logo-img { height: 56px; width: auto; object-fit: contain; }
+.logo-img {
+  height: 44px;
+  width: auto;
+  max-width: 100px;
+  object-fit: contain;
+  display: block;
+}
 
 .logo-sam-img {
   background: white;
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: var(--esp-1) var(--esp-2);
+  border-radius: 6px;
 }
 
 .app-header-titre {
   text-align: left;
   border-left: 2px solid rgba(255,255,255,0.25);
-  padding-left: 20px;
+  padding-left: var(--esp-4);
 }
 
 .app-header-titre h1 {
   color: white;
-  font-size: 1.75rem;
+  font-size: var(--texte-lg);
   font-weight: 800;
   margin: 0;
   letter-spacing: 0.5px;
@@ -59,8 +91,7 @@
 
 .app-header-soustitre {
   color: var(--couleur-or-clair);
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: var(--texte-xs);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -69,15 +100,15 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
+  gap: var(--esp-3);
 }
 
 .app-header-utilisateur {
   color: white;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: var(--texte-sm);
   background: rgba(255,255,255,0.12);
-  padding: 8px 18px;
+  padding: 6px 14px;
   border-radius: 20px;
 }
 
@@ -85,11 +116,9 @@
   background: var(--couleur-urgence);
   border: none;
   color: white;
-  padding: 12px 22px;
+  padding: var(--esp-3) var(--esp-4);
   border-radius: var(--rayon-sm);
-  font-size: 1rem;
+  font-size: var(--texte-sm);
   font-weight: 700;
   cursor: pointer;
-  transition: all var(--transition-rapide);
 }
-.app-header-deconnexion:hover { background: #a52e21; }

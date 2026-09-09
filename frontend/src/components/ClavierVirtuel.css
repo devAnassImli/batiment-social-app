@@ -1,0 +1,84 @@
+@import '../styles/design-tokens.css';
+
+.clavier-fond {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 54, 56, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  padding: var(--esp-4);
+}
+
+.clavier-boite {
+  background: white;
+  border-radius: var(--rayon-lg);
+  padding: var(--esp-5);
+  width: 620px;
+  max-width: 100%;
+  box-shadow: var(--ombre-lg);
+}
+
+.clavier-affichage {
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid var(--couleur-teal-600);
+  border-radius: var(--rayon-sm);
+  padding: var(--esp-3);
+  font-size: var(--texte-md);
+  font-family: var(--police);
+  margin-bottom: var(--esp-4);
+  resize: none;
+  background: var(--couleur-teal-100);
+  color: var(--couleur-texte);
+}
+
+.clavier-touches { display: flex; flex-direction: column; gap: var(--esp-2); margin-bottom: var(--esp-4); }
+
+.clavier-ligne { display: flex; justify-content: center; gap: var(--esp-2); }
+
+.clavier-ligne button {
+  background: #f7f9f9;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon-sm);
+  min-width: 44px;
+  height: 48px;
+  font-size: var(--texte-md);
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--couleur-texte);
+  flex: 1;
+}
+
+.clavier-ligne button:active { background: var(--couleur-teal-700); color: white; }
+
+.clavier-maj {
+  background: var(--couleur-teal-100) !important;
+  color: var(--couleur-teal-800) !important;
+  flex: 0 0 60px !important;
+  font-size: var(--texte-lg) !important;
+}
+
+.clavier-maj-actif { background: var(--couleur-teal-700) !important; color: white !important; }
+
+.clavier-actions { display: flex; gap: var(--esp-2); }
+
+.clavier-espace, .clavier-effacer, .clavier-annuler, .clavier-valider {
+  flex: 1;
+  border: none;
+  border-radius: var(--rayon-sm);
+  padding: var(--esp-3) 0;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: var(--texte-sm);
+}
+
+.clavier-espace { background: #f1f2f3; color: var(--couleur-texte); flex: 1.6; }
+.clavier-effacer { background: #f1f2f3; color: var(--couleur-texte); }
+.clavier-annuler { background: var(--couleur-urgence); color: white; }
+.clavier-valider { background: #16a34a; color: white; flex: 1.4; }
+.clavier-valider:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.clavier-ligne-accents button { flex: 1; font-size: var(--texte-base); }

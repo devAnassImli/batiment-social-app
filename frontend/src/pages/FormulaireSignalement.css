@@ -1,29 +1,30 @@
+@import '../styles/design-tokens.css';
+
 .signalement-main {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 22px;
-  padding: 20px;
+  gap: var(--esp-5);
+  padding: var(--esp-5);
 }
 
 .signalement-carte {
-  background: var(--couleur-surface);
+  background: white;
   border-radius: var(--rayon-lg);
-  padding: 38px;
+  padding: var(--esp-6);
   width: 100%;
   max-width: 580px;
   box-shadow: var(--ombre-lg);
   border: 1px solid var(--couleur-bordure);
-  min-height: 420px;
 }
 
 .signalement-progression {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 28px;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-5);
 }
 
 .signalement-point {
@@ -37,116 +38,149 @@
 
 .signalement-carte h2 {
   text-align: center;
-  font-size: 1.45rem;
+  font-size: var(--texte-lg);
   font-weight: 800;
-  margin-bottom: 26px;
+  margin-bottom: var(--esp-5);
 }
 
-.signalement-grille {
+.signalement-grille-zones {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--esp-3);
 }
 
-.signalement-grille-urgence { grid-template-columns: 1fr 1fr; }
-
-.signalement-choix {
-  position: relative;
+.signalement-zone-carte {
   background: #f7f9f9;
   border: 2px solid var(--couleur-bordure);
-  border-top: 4px solid var(--couleur-categorie, var(--couleur-bordure));
   border-radius: var(--rayon-md);
-  padding: 28px 14px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--couleur-texte);
+  padding: var(--esp-4) var(--esp-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--esp-2);
   cursor: pointer;
-  transition: all var(--transition-rapide);
 }
 
-.signalement-choix:hover { border-color: var(--couleur-teal-600); transform: translateY(-2px); }
+.signalement-zone-carte:hover { border-color: var(--couleur-teal-600); }
 
-.signalement-choix:active { transform: scale(0.97); }
-
-.signalement-choix.selectionne {
-  background: var(--couleur-categorie, var(--couleur-teal-700));
-  color: white;
-  border-color: var(--couleur-categorie, var(--couleur-teal-700));
+.signalement-zone-icone {
+  width: 44px;
+  height: 44px;
+  max-width: 44px;
+  max-height: 44px;
+  object-fit: contain;
+  display: block;
 }
 
-.signalement-choix-icone { display: block; font-size: 1.6rem; margin-bottom: 8px; }
+.signalement-zone-nom { font-weight: 700; font-size: var(--texte-sm); text-align: center; }
 
-.signalement-normal { border-color: #cde3d8; }
-
-.signalement-urgent { border-color: #f3c9c0; color: var(--couleur-urgence); }
-
-.signalement-urgent.selectionne { background: var(--couleur-urgence); border-color: var(--couleur-urgence); color: white; }
-
-.signalement-liste-problemes { display: flex; flex-direction: column; gap: 11px; }
+.signalement-liste-problemes { display: flex; flex-direction: column; gap: var(--esp-2); }
 
 .signalement-probleme {
   background: #f7f9f9;
   border: 2px solid var(--couleur-bordure);
   border-radius: var(--rayon-sm);
-  padding: 17px 22px;
-  font-size: 1.05rem;
+  padding: var(--esp-4) var(--esp-4);
+  font-size: var(--texte-base);
   font-weight: 600;
   text-align: left;
   cursor: pointer;
-  transition: all var(--transition-rapide);
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
 }
 
-.signalement-probleme:hover { border-color: var(--couleur-teal-600); }
-
-.signalement-probleme:active { transform: scale(0.98); background: var(--couleur-teal-700); color: white; }
+.signalement-probleme:active { background: var(--couleur-teal-700); color: white; }
 
 .signalement-probleme-autre { border-style: dashed; color: var(--couleur-texte-att); }
 
-.signalement-autre-zone { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
-
-.signalement-retour {
-  margin-top: 22px;
-  background: none;
-  border: none;
-  color: var(--couleur-texte-att);
-  font-weight: 600;
-  font-size: 0.98rem;
-  cursor: pointer;
-  padding: 8px;
+.signalement-probleme-icone {
+  width: 22px;
+  height: 22px;
+  max-width: 22px;
+  max-height: 22px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
 
-.signalement-retour:hover { color: var(--couleur-teal-700); }
+.signalement-retour {
+  margin-top: var(--esp-5);
+  background: #f1f2f3;
+  border: 2px solid var(--couleur-bordure);
+  color: var(--couleur-texte);
+  font-weight: 700;
+  font-size: var(--texte-base);
+  cursor: pointer;
+  padding: var(--esp-3) var(--esp-5);
+  border-radius: var(--rayon-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+}
 
-.signalement-recap { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+.signalement-grille { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-3); }
+
+.signalement-choix {
+  background: #f7f9f9;
+  border: 2px solid var(--couleur-bordure);
+  border-radius: var(--rayon-md);
+  padding: var(--esp-5) var(--esp-3);
+  font-size: var(--texte-md);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.signalement-choix.selectionne { background: var(--couleur-teal-700); color: white; }
+
+.signalement-urgent { color: var(--couleur-urgence); }
+
+.signalement-urgent.selectionne { background: var(--couleur-urgence); color: white; }
+
+.signalement-recap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  justify-content: center;
+  margin-bottom: var(--esp-5);
+}
 
 .signalement-tag {
-  background: var(--couleur-teal-100);
-  color: var(--couleur-teal-800);
   padding: 7px 16px;
   border-radius: 20px;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: var(--texte-sm);
 }
 
+.signalement-tag-zone { background: var(--couleur-teal-100); color: var(--couleur-teal-800); }
+.signalement-tag-probleme { background: #f1f2f3; color: var(--couleur-texte); }
+.tag-normal { background: #dcfce7; color: #16a34a; }
 .tag-urgent { background: var(--couleur-urgence-fond); color: var(--couleur-urgence); }
+
+.signalement-label-commentaire {
+  display: block;
+  font-size: var(--texte-sm);
+  font-weight: 700;
+  color: var(--couleur-texte-att);
+  margin-bottom: var(--esp-2);
+}
 
 .signalement-description {
   width: 100%;
+  box-sizing: border-box;
   border: 2px solid var(--couleur-bordure);
   border-radius: var(--rayon-sm);
-  padding: 16px;
-  font-size: 1.08rem;
-  font-family: inherit;
+  padding: var(--esp-4);
+  font-size: var(--texte-base);
+  font-family: var(--police);
   resize: none;
 }
-
-.signalement-description:focus { border-color: var(--couleur-teal-600); }
 
 .signalement-boutons-finaux {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 22px;
+  margin-top: var(--esp-5);
 }
 
 .signalement-envoyer {
@@ -154,70 +188,29 @@
   color: white;
   border: none;
   border-radius: var(--rayon-sm);
-  padding: 17px 30px;
-  font-size: 1.1rem;
+  padding: var(--esp-4) var(--esp-6);
+  font-size: var(--texte-md);
   font-weight: 700;
   cursor: pointer;
-  box-shadow: var(--ombre-sm);
 }
 
-.signalement-envoyer:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.signalement-envoyer:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .signalement-annuler-global {
-  background: white;
-  border: 2px solid var(--couleur-bordure);
-  color: var(--couleur-texte-att);
+  background: var(--couleur-urgence);
+  border: none;
+  color: white;
   font-size: var(--texte-base);
   font-weight: 700;
   cursor: pointer;
   padding: var(--esp-3) var(--esp-6);
   border-radius: var(--rayon-sm);
-  transition: all var(--transition-rapide);
 }
-
-.signalement-annuler-global:hover {
-  border-color: var(--couleur-urgence);
-  color: var(--couleur-urgence);
-}
-
-.signalement-annuler-global:hover { color: var(--couleur-urgence); }
-
-.signalement-grille-zones {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.signalement-zone-carte {
-  background: #f7f9f9;
-  border: 2px solid var(--couleur-bordure);
-  border-radius: var(--rayon-md);
-  padding: 22px 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all var(--transition-rapide);
-}
-
-.signalement-zone-carte:hover {
-  border-color: var(--couleur-teal-600);
-  transform: translateY(-2px);
-  box-shadow: var(--ombre-sm);
-}
-
-.signalement-zone-icone { width: 48px; height: 48px; object-fit: contain; }
-
-.signalement-zone-secours { display: none; font-size: 2rem; }
-
-.signalement-zone-nom { font-weight: 700; font-size: 1rem; }
 
 .signalement-confirmation-fond {
   position: fixed;
   inset: 0;
-  background: rgba(6, 54, 56, 0.6);
-  backdrop-filter: blur(3px);
+  background: rgba(6, 54, 56, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -227,34 +220,32 @@
 .signalement-confirmation-boite {
   background: white;
   border-radius: var(--rayon-lg);
-  padding: 32px;
-  width: 380px;
+  padding: var(--esp-6);
+  width: 400px;
+  max-width: 90vw;
   box-shadow: var(--ombre-lg);
   text-align: center;
 }
 
+.signalement-confirmation-icone { font-size: 2.6rem; margin-bottom: var(--esp-3); }
+
 .signalement-confirmation-boite h3 {
   color: var(--couleur-teal-800);
-  margin-bottom: 12px;
-  font-size: 1.2rem;
+  font-size: var(--texte-lg);
+  margin-bottom: var(--esp-4);
 }
 
-.signalement-confirmation-boite p {
-  color: var(--couleur-texte-att);
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
+.signalement-confirmation-recap { display: flex; flex-wrap: wrap; gap: var(--esp-2); justify-content: center; margin-bottom: var(--esp-3); }
 
-.signalement-confirmation-boutons {
-  display: flex;
-  gap: 12px;
-}
+.signalement-confirmation-texte { color: var(--couleur-texte-att); margin-bottom: var(--esp-5); }
+
+.signalement-confirmation-boutons { display: flex; gap: var(--esp-3); }
 
 .signalement-confirmation-non, .signalement-confirmation-oui {
   flex: 1;
   border: none;
   border-radius: var(--rayon-sm);
-  padding: 12px 0;
+  padding: var(--esp-3) 0;
   font-weight: 700;
   cursor: pointer;
 }
