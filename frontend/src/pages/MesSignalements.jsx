@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { recupererMesSignalements, supprimerSignalement, modifierSignalement, validerSignalement } from '../services/api';
+import { recupererMesSignalements, supprimerSignalement, modifierSignalement } from '../services/api';
 import ClavierVirtuel from '../components/ClavierVirtuel';
 import './MesSignalements.css';
 const COULEURS_STATUT = {
-  A_VALIDER: { label: 'En attente', couleur: '#d97706', fond: '#fef3e2' },
-  VALIDE: { label: 'Validé', couleur: '#2563eb', fond: '#eaf1fd' },
-  REFUSE: { label: 'Refusé', couleur: '#c0392b', fond: '#fdecea' },
-  ANNULE: { label: 'Annulé', couleur: '#6b7280', fond: '#f1f2f3' },
+  A_VALIDER: { couleur: '#d97706', fond: '#fef3e2' },
+  VALIDE: { couleur: '#2563eb', fond: '#eaf1fd' },
+  AVANCEMENT: { couleur: '#7c3aed', fond: '#f3e8ff' },
 };
 
 function dateAujourdhui() {
@@ -47,11 +46,7 @@ export default function MesSignalements({ employe, onRetour }) {
     setSelectionne(null);
     charger();
   };
-  const valider = async () => {
-    await validerSignalement(selectionne.IdSignalement, employe.Matricola?.trim());
-    setSelectionne(null);
-    charger();
-  };
+ 
   const ouvrirEdition = () => {
     setTexteEdition(selectionne.DescriptionComplete?.replace(/^\[Matricule: \d+\]\s*/, '') || '');
     setModeEdition(true);
@@ -93,10 +88,10 @@ export default function MesSignalements({ employe, onRetour }) {
                   <button className="mes-sel" onClick={() => setSelectionne(s)}>SEL</button>
                   <div className="mes-carte-contenu">
                     <div className="mes-carte-ligne1">
-                      <span className="mes-carte-numero">#{s.IdSignalement}</span>
-                      <span className="mes-badge-statut" style={{ color: info.couleur, background: info.fond }}>
-                        {info.label}
-                      </span>
+                     <span className="mes-carte-numero">{s.NumeroAffiche}</span>
+                     <span className="mes-badge-statut" style={{ color: (COULEURS_STATUT[s.Statut] || COULEURS_STATUT.A_VALIDER).couleur, background: (COULEURS_STATUT[s.Statut] || COULEURS_STATUT.A_VALIDER).fond }}>
+  {s.StatutLabel}
+</span>
                     </div>
                     <p className="mes-carte-objet">{s.Description}</p>
                     <div className="mes-carte-ligne3">
@@ -119,19 +114,19 @@ export default function MesSignalements({ employe, onRetour }) {
         <div className="mes-detail-fond" onClick={() => setSelectionne(null)}>
           <div className="mes-detail-boite" onClick={(e) => e.stopPropagation()}>
             <button className="mes-detail-fermer" onClick={() => setSelectionne(null)}>✕</button>
-            <h3>Demande #{selectionne.IdSignalement}</h3>
+           <h3>Demande {selectionne.NumeroAffiche}</h3>
 
-            <span
-              className="mes-detail-statut"
-              style={{
-                color: (COULEURS_STATUT[selectionne.Statut] || COULEURS_STATUT.A_VALIDER).couleur,
-                background: (COULEURS_STATUT[selectionne.Statut] || COULEURS_STATUT.A_VALIDER).fond,
-              }}
-            >
-              {(COULEURS_STATUT[selectionne.Statut] || COULEURS_STATUT.A_VALIDER).label}
-            </span>
-
-            <dl>
+<span
+  className="mes-detail-statut"
+  style={{
+    color: (COULEURS_STATUT[selectionne.Statut] || COULEURS_STATUT.A_VALIDER).couleur,
+    background: (COULEURS_STATUT[selectionne.Statut] || COULEURS_STATUT.A_VALIDER).fond,
+  }}
+>
+  {selectionne.StatutLabel}
+</span>
+                      <dl>
+              <dt>Matricule</dt><dd>{selectionne.DescriptionComplete?.match(/\[Matricule: (\d+)\]/)?.[1] || '—'}</dd>
               <dt>Demandeur</dt><dd>{selectionne.NomDemandeur}</dd>
               <dt>Date</dt><dd>{new Date(selectionne.DateCreation).toLocaleString('fr-FR')}</dd>
               <dt>Zone</dt><dd>{selectionne.ZoneNom}</dd>
@@ -139,23 +134,31 @@ export default function MesSignalements({ employe, onRetour }) {
               <dt>Objet</dt><dd>{selectionne.Description}</dd>
             </dl>
 
-            <div className="mes-detail-commentaire">
-              <span className="mes-detail-commentaire-label">Détail complet</span>
-              <p>{selectionne.DescriptionComplete}</p>
-            </div>
-
-                       <div className="mes-detail-actions">
-              {estAdmin && selectionne.Statut === 'A_VALIDER' && (
-                <button className="mes-detail-valider" onClick={valider}>
-                  ✓ Valider
-                </button>
+                       {(() => {
+              const texteApresMatricule = selectionne.DescriptionComplete?.replace(/^\[Matricule: \d+\]\s*/, '').trim();
+              return texteApresMatricule ? (
+                <div className="mes-detail-commentaire">
+                  <span className="mes-detail-commentaire-label">Description</span>
+                  <p>{texteApresMatricule}</p>
+                </div>
+              ) : null;
+            })()}
+                                     <div className="mes-detail-actions">
+              {selectionne.Statut === 'A_VALIDER' && (
+                <>
+                  <button className="mes-detail-modifier" onClick={ouvrirEdition}>
+                    ✎ Modifier
+                  </button>
+                  <button className="mes-detail-supprimer" onClick={() => setConfirmerSuppression(true)}>
+                    🗑 Supprimer
+                  </button>
+                </>
               )}
-              <button className="mes-detail-modifier" onClick={ouvrirEdition}>
-                ✎ Modifier
-              </button>
-              <button className="mes-detail-supprimer" onClick={() => setConfirmerSuppression(true)}>
-                🗑 Supprimer
-              </button>
+              {selectionne.Statut !== 'A_VALIDER' && (
+                <p className="mes-detail-info-lecture-seule">
+                  Cette demande a été validée — elle n'est plus modifiable depuis le totem.
+                </p>
+              )}
             </div>
           </div>
         </div>

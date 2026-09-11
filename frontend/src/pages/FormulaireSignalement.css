@@ -13,9 +13,9 @@
 .signalement-carte {
   background: white;
   border-radius: var(--rayon-lg);
-  padding: var(--esp-6);
+  padding: var(--esp-7);
   width: 100%;
-  max-width: 580px;
+  max-width: 680px;
   box-shadow: var(--ombre-lg);
   border: 1px solid var(--couleur-bordure);
 }
@@ -53,26 +53,30 @@
   background: #f7f9f9;
   border: 2px solid var(--couleur-bordure);
   border-radius: var(--rayon-md);
-  padding: var(--esp-4) var(--esp-2);
+  padding: var(--esp-5) var(--esp-3);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--esp-2);
+  gap: var(--esp-3);
   cursor: pointer;
 }
 
 .signalement-zone-carte:hover { border-color: var(--couleur-teal-600); }
 
 .signalement-zone-icone {
-  width: 44px;
-  height: 44px;
-  max-width: 44px;
-  max-height: 44px;
+  width: 60px;
+  height: 60px;
+  max-width: 60px;
+  max-height: 60px;
   object-fit: contain;
   display: block;
 }
 
-.signalement-zone-nom { font-weight: 700; font-size: var(--texte-sm); text-align: center; }
+.signalement-zone-nom {
+  font-weight: 700;
+  font-size: var(--texte-md);
+  text-align: center;
+}
 
 .signalement-liste-problemes { display: flex; flex-direction: column; gap: var(--esp-2); }
 
@@ -103,20 +107,22 @@
   display: block;
   flex-shrink: 0;
 }
-
+.signalement-retour:hover {
+  background: var(--couleur-teal-600);
+  color: white;
+}
 .signalement-retour {
-  margin-top: var(--esp-5);
-  background: #f1f2f3;
-  border: 2px solid var(--couleur-bordure);
-  color: var(--couleur-texte);
+  display: block;
+  margin: var(--esp-5) auto 0 auto;
+  background: var(--couleur-teal-100);
+  border: 2px solid var(--couleur-teal-600);
+  color: var(--couleur-teal-800);
   font-weight: 700;
   font-size: var(--texte-base);
   cursor: pointer;
-  padding: var(--esp-3) var(--esp-5);
+  padding: var(--esp-3) var(--esp-6);
   border-radius: var(--rayon-sm);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--esp-2);
+  text-align: center;
 }
 
 .signalement-grille { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-3); }
@@ -252,3 +258,20 @@
 
 .signalement-confirmation-non { background: #f1f2f3; color: var(--couleur-texte); }
 .signalement-confirmation-oui { background: #16a34a; color: white; }
+
+.signalement-numero-affiche {
+  background: var(--couleur-teal-100);
+  border: 2px solid var(--couleur-teal-600);
+  border-radius: var(--rayon-sm);
+  padding: var(--esp-3) var(--esp-4);
+  margin-bottom: var(--esp-4);
+  text-align: center;
+  font-size: var(--texte-base);
+  color: var(--couleur-teal-800);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-2);
+}
+.signalement-numero-modifier { font-size: var(--texte-sm); opacity: 0.7; }

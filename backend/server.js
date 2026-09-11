@@ -11,6 +11,7 @@ const cron = require("node-cron");
 const app = express();
 app.use(cors());
 app.use(express.json());
+const { envoyerSmsAuxAdmins } = require("./sms");
 
 // ══════════════════════════════════════════════════════════
 //  CONFIG SQL SERVER (base employes, lecture seule)
@@ -98,6 +99,18 @@ app.post("/api/signalements", async (req, res) => {
       idSignalement: resultat.idDomanda,
       numero: `${resultat.numero}/${resultat.annee}`,
     });
+
+    // Envoi SMS en arriere-plan, ne bloque pas la reponse au totem
+    const nomsAdmins = [
+      "ANASS Imli",
+      "Manlio Coppola",
+      "VILLARD Adrien",
+      "DELANNE Sebastien",
+    ];
+    envoyerSmsAuxAdmins(
+      "Totem Batiment social - nouvelle demande a valider",
+      nomsAdmins,
+    ).catch((err) => console.error("Erreur SMS :", err.message));
   } catch (err) {
     console.error("Erreur creation demande SQL Server :", err.message);
     res.status(500).json({ erreur: err.message });
@@ -263,27 +276,34 @@ app.delete("/api/mes-signalements/:id", async (req, res) => {
   }
 });
 
-app.put('/api/mes-signalements/:id', async (req, res) => {
+app.put("/api/mes-signalements/:id", async (req, res) => {
   const { id } = req.params;
   const { matricule, description } = req.body;
-  const matriculeFormate = (matricule || '').padStart(5, '0').slice(0, 5);
+  const matriculeFormate = (matricule || "").padStart(5, "0").slice(0, 5);
   const estAdmin = MATRICULES_ADMIN.includes(matriculeFormate);
 
   try {
-    await dbSql.modifierDemande(Number(id), matriculeFormate, estAdmin, { description });
+    await dbSql.modifierDemande(Number(id), matriculeFormate, estAdmin, {
+      description,
+    });
     res.json({ succes: true });
   } catch (err) {
     res.status(403).json({ succes: false, message: err.message });
   }
 });
 
-app.post('/api/mes-signalements/:id/valider', async (req, res) => {
+app.post("/api/mes-signalements/:id/valider", async (req, res) => {
   const { id } = req.params;
   const { matricule } = req.body;
-  const matriculeFormate = (matricule || '').padStart(5, '0').slice(0, 5);
+  const matriculeFormate = (matricule || "").padStart(5, "0").slice(0, 5);
 
   if (!MATRICULES_ADMIN.includes(matriculeFormate)) {
-    return res.status(403).json({ succes: false, message: 'Seuls les administrateurs peuvent valider' });
+    return res
+      .status(403)
+      .json({
+        succes: false,
+        message: "Seuls les administrateurs peuvent valider",
+      });
   }
 
   try {
@@ -679,16 +699,31 @@ app.get("/api/mes-signalements/:matricule", async (req, res) => {
     });
     res.json({
       estAdmin,
-      signalements: signalements.map((s) => ({
-        IdSignalement: s.IdDomanda,
-        DateCreation: s.DataDomanda,
-        NomDemandeur: s.Richiedente,
-        Description: s.Oggetto,
-        DescriptionComplete: s.Descrittivo,
-        Statut: s.Validata ? "VALIDE" : "A_VALIDER",
-        AvancementNom: s.AvanzamentoNome,
-        ZoneNom: (s.Oggetto || "").split(" — ")[0],
-      })),
+      signalements: signalements.map((s) => {
+        let statutLabel, statutCode;
+        if (!s.Validata) {
+          statutLabel = "En attente";
+          statutCode = "A_VALIDER";
+        } else if (!s.IdAvanzamento) {
+          statutLabel = "Validé";
+          statutCode = "VALIDE";
+        } else {
+          statutLabel = s.AvanzamentoNome || "Validé";
+          statutCode = "AVANCEMENT";
+        }
+        return {
+          IdSignalement: s.IdDomanda,
+          NumeroAffiche: `${s.NumDomanda}/${s.AnnoDomanda}`,
+          DateCreation: s.DataDomanda,
+          NomDemandeur: s.Richiedente,
+          Description: s.Oggetto,
+          DescriptionComplete: s.Descrittivo,
+          Statut: statutCode,
+          StatutLabel: statutLabel,
+          AvancementNom: s.AvanzamentoNome,
+          ZoneNom: (s.Oggetto || "").split(" — ")[0],
+        };
+      }),
     });
   } catch (err) {
     console.error("Erreur liste demandes :", err.message);
@@ -794,6 +829,6 @@ cron.schedule("0 3 * * *", () => {
     .nettoyerAncienneDemandes()
     .catch((err) => console.error("Erreur nettoyage auto :", err.message));
 });
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Backend demarre sur http://localhost:${PORT}`);
 });

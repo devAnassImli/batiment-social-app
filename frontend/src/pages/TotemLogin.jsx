@@ -11,6 +11,7 @@ import planSite from '../assets/plan-site.jpg';
 import numerosUtiles from '../assets/numeros-utiles.jpg';
 import './TotemLogin.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import iconeTravaux from '../assets/icone-travaux.png';
 
 const LONGUEUR_MAX = 5;
 const MATRICULES_AUTORISES = ['05102', '04575', '04227', '03933'];
@@ -148,11 +149,11 @@ export default function TotemLogin() {
         {vue === 'accueil' && (
           <motion.div key="accueil" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
             <main className="totem-accueil">
-              <button className="carte-action-principale" onClick={() => setVue('signalement')}>
-                <div className="carte-action-icone">⚠️</div>
+                            <button className="carte-action-principale" onClick={() => setVue('signalement')}>
+                <img src={iconeTravaux} alt="" className="carte-action-icone-img" />
                 <div className="carte-action-texte">
                   <h2>Signaler un problème</h2>
-                  <p>Décrivez-le en quelques secondes</p>
+                 
                 </div>
                 <div className="carte-action-fleche">→</div>
               </button>
@@ -195,11 +196,11 @@ export default function TotemLogin() {
                 <button className="totem-bouton-valider" onClick={valider} disabled={chargement}>
                   {chargement ? 'Vérification...' : 'VALIDER'}
                 </button>
-                <button className="totem-bouton-effacer" onClick={reset}>Effacer</button>
+                <button className="totem-bouton-effacer" onClick={reset}>SUPPRIMER</button>
                 {erreur && <p className="totem-erreur">{erreur}</p>}
               </div>
               <footer className="totem-footer-connexion">
-                Système automatique de signalement des pannes (douches, armoires, etc.)
+                Système automatique de signalement des pannes (douches, casiers, etc.)
               </footer>
             </main>
           </motion.div>

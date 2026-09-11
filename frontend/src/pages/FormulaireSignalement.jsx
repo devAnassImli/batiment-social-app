@@ -19,6 +19,8 @@ const ZONES = [
   { nom: 'Autre', icone: iconeAutre },
 ];
 
+const ZONES_AVEC_NUMERO = ['Douches', 'Casiers'];
+
 const COULEURS_CATEGORIE = {
   Plomberie: '#2563eb',
   Électricité: '#d97706',
@@ -66,6 +68,7 @@ const PROBLEMES_PAR_ZONE = {
 export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) {
   const [etape, setEtape] = useState(1);
   const [zone, setZone] = useState(null);
+  const [numeroEmplacement, setNumeroEmplacement] = useState('');
   const [categorie, setCategorie] = useState(null);
   const [description, setDescription] = useState('');
   const [commentaire, setCommentaire] = useState('');
@@ -86,20 +89,29 @@ export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) 
 
   function choisirZone(nom) {
     setZone(nom);
+    setNumeroEmplacement('');
     if (nom === 'Autre') {
       setCategorie('Autre');
       setClavierPour('zoneAutre');
+    } else if (ZONES_AVEC_NUMERO.includes(nom)) {
+      setClavierPour('numeroEmplacement');
     }
   }
 
   function choisirProbleme(probleme) {
     setCategorie(probleme.categorie);
-    setDescription(probleme.texte);
+    const texteAvecNumero = ZONES_AVEC_NUMERO.includes(zone) && numeroEmplacement
+      ? `[N°${numeroEmplacement}] ${probleme.texte}`
+      : probleme.texte;
+    setDescription(texteAvecNumero);
     etapeSuivante();
   }
 
   function fermerClavier() {
     if (clavierPour === 'zoneAutre' && !description) {
+      setZone(null);
+    }
+    if (clavierPour === 'numeroEmplacement' && !numeroEmplacement) {
       setZone(null);
     }
     setClavierPour(null);
@@ -109,6 +121,8 @@ export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) 
     if (clavierPour === 'zoneAutre') {
       setDescription(texte);
       setEtape(2);
+    } else if (clavierPour === 'numeroEmplacement') {
+      setNumeroEmplacement(texte);
     } else if (clavierPour === 'problemeAutre') {
       setCategorie('Autre');
       setDescription(texte);
@@ -134,7 +148,7 @@ export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) 
         description: descriptionFinale,
       });
       if (ok && resultat.succes) {
-       onEnvoye({ zone, categorie, urgence, description: descriptionFinale, id: resultat.idSignalement, numero: resultat.numero });
+        onEnvoye({ zone, categorie, urgence, description: descriptionFinale, id: resultat.idSignalement });
       } else {
         alert("Erreur lors de l'envoi, réessayez.");
         setAfficherConfirmation(false);
@@ -154,6 +168,7 @@ export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) 
   };
 
   const couleurCategorie = categorie ? COULEURS_CATEGORIE[categorie] || '#64748b' : '#64748b';
+  const afficherListeProblemes = etape === 1 && zone && zone !== 'Autre' && (!ZONES_AVEC_NUMERO.includes(zone) || numeroEmplacement);
 
   return (
     <main className="signalement-main">
@@ -179,9 +194,17 @@ export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) 
             </motion.div>
           )}
 
-          {etape === 1 && zone && zone !== 'Autre' && (
+          {afficherListeProblemes && (
             <motion.div key="problemes" variants={variantes} initial="entree" animate="centre" exit="sortie" transition={{ duration: 0.25 }}>
               <h2>{zone} — quel est le problème ?</h2>
+
+              {ZONES_AVEC_NUMERO.includes(zone) && (
+                <div className="signalement-numero-affiche" onClick={() => setClavierPour('numeroEmplacement')}>
+                  N° {zone === 'Douches' ? 'de la douche' : 'du casier'} : <strong>{numeroEmplacement || '— à saisir —'}</strong>
+                  <span className="signalement-numero-modifier">✎</span>
+                </div>
+              )}
+
               <div className="signalement-liste-problemes">
                 {(PROBLEMES_PAR_ZONE[zone] || []).map((p) => (
                   <button key={p.texte} type="button" className="signalement-probleme" onClick={() => choisirProbleme(p)}>
@@ -243,13 +266,22 @@ export default function FormulaireSignalement({ employe, onAnnuler, onEnvoye }) 
       </div>
 
       <button type="button" className="signalement-annuler-global" onClick={onAnnuler}>
-        Annuler et revenir à l'accueil
+         Revenir à l'accueil
       </button>
 
-      {clavierPour && (
+          {clavierPour && (
         <ClavierVirtuel
-          valeurInitiale={clavierPour === 'commentaire' ? commentaire : ''}
+          valeurInitiale={clavierPour === 'commentaire' ? commentaire : clavierPour === 'numeroEmplacement' ? numeroEmplacement : ''}
           obligatoire={clavierPour !== 'commentaire'}
+          titre={
+            clavierPour === 'numeroEmplacement'
+              ? `Indiquez le numéro ${zone === 'Douches' ? 'de la douche' : 'du casier'}`
+              : clavierPour === 'zoneAutre'
+              ? 'Décrivez le problème'
+              : clavierPour === 'problemeAutre'
+              ? 'Précisez le problème'
+              : 'Ajoutez un commentaire'
+          }
           onFermer={fermerClavier}
           onValider={validerClavier}
         />

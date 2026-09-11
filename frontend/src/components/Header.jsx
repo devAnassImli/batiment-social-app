@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import logoRiva from '../assets/logo-riva.png';
 import logoSam from '../assets/logo-sam.png';
 import './Header.css';
+import iconeTimer from '../assets/icone-timer.png';
 
 export default function Header({ utilisateur, onDeconnexion, secondesRestantes }) {
   const [heure, setHeure] = useState(new Date());
@@ -19,16 +20,18 @@ export default function Header({ utilisateur, onDeconnexion, secondesRestantes }
 
   return (
     <header className="app-header">
-      <div className="app-header-gauche">
-        <span className="app-header-date">{dateFormatee}</span>
-        <span className="app-header-heure">{heureFormatee}</span>
-        {secondesRestantes != null && (
-          <span className={`app-header-timer ${alerte ? 'app-header-timer-alerte' : ''}`}>
-            ⏱ {secondesRestantes}s
-          </span>
-        )}
+               <div className="app-header-gauche">
+        <div className="app-header-ligne-date">
+          <span className="app-header-date">{dateFormatee}</span>
+          <span className="app-header-heure">{heureFormatee}</span>
+          {secondesRestantes != null && (
+            <div className={`app-header-timer ${alerte ? 'app-header-timer-alerte' : ''}`}>
+              <img src={iconeTimer} alt="" className="app-header-timer-icone" />
+              <span>{secondesRestantes}s</span>
+            </div>
+          )}
+        </div>
       </div>
-
       <div className="app-header-centre">
         <img src={logoRiva} alt="RIVA" className="logo-img" />
         <img src={logoSam} alt="SAM Montereau" className="logo-img logo-sam-img" />

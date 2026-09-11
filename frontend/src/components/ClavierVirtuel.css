@@ -6,19 +6,19 @@
   background: rgba(6, 54, 56, 0.8);
   backdrop-filter: blur(4px);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   z-index: 300;
-  padding: var(--esp-4);
 }
 
 .clavier-boite {
   background: white;
-  border-radius: var(--rayon-lg);
-  padding: var(--esp-5);
-  width: 620px;
+  border-radius: var(--rayon-lg) var(--rayon-lg) 0 0;
+  padding: var(--esp-6) var(--esp-7);
+  width: 100%;
   max-width: 100%;
   box-shadow: var(--ombre-lg);
+  box-sizing: border-box;
 }
 
 .clavier-affichage {
@@ -26,10 +26,10 @@
   box-sizing: border-box;
   border: 2px solid var(--couleur-teal-600);
   border-radius: var(--rayon-sm);
-  padding: var(--esp-3);
-  font-size: var(--texte-md);
+  padding: var(--esp-4);
+  font-size: 1.3rem;
   font-family: var(--police);
-  margin-bottom: var(--esp-4);
+  margin-bottom: var(--esp-5);
   resize: none;
   background: var(--couleur-teal-100);
   color: var(--couleur-texte);
@@ -43,9 +43,9 @@
   background: #f7f9f9;
   border: 1px solid var(--couleur-bordure);
   border-radius: var(--rayon-sm);
-  min-width: 44px;
-  height: 48px;
-  font-size: var(--texte-md);
+  min-width: 56px;
+  height: 60px;
+  font-size: 1.4rem;
   font-weight: 700;
   cursor: pointer;
   color: var(--couleur-texte);
@@ -57,7 +57,7 @@
 .clavier-maj {
   background: var(--couleur-teal-100) !important;
   color: var(--couleur-teal-800) !important;
-  flex: 0 0 60px !important;
+  flex: 0 0 80px !important;
   font-size: var(--texte-lg) !important;
 }
 
@@ -69,12 +69,12 @@
   flex: 1;
   border: none;
   border-radius: var(--rayon-sm);
-  padding: var(--esp-3) 0;
+  padding: var(--esp-4) 0;
   font-weight: 700;
   cursor: pointer;
-  font-size: var(--texte-sm);
+  font-size: var(--texte-base);
+  min-height: 54px;
 }
-
 .clavier-espace { background: #f1f2f3; color: var(--couleur-texte); flex: 1.6; }
 .clavier-effacer { background: #f1f2f3; color: var(--couleur-texte); }
 .clavier-annuler { background: var(--couleur-urgence); color: white; }
@@ -82,3 +82,11 @@
 .clavier-valider:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .clavier-ligne-accents button { flex: 1; font-size: var(--texte-base); }
+
+.clavier-titre {
+  text-align: center;
+  font-size: var(--texte-lg);
+  font-weight: 700;
+  color: var(--couleur-teal-800);
+  margin-bottom: var(--esp-4);
+}

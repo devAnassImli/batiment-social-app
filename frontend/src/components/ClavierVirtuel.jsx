@@ -9,7 +9,7 @@ const LIGNES_LETTRES = [
 ];
 const ACCENTS = ['é','è','à','ç','ù','ê','î','ô','â','û','ï','ë'];
 
-export default function ClavierVirtuel({ valeurInitiale, onValider, onFermer, obligatoire }) {
+export default function ClavierVirtuel({ valeurInitiale, onValider, onFermer, obligatoire, titre }) {
   const [texte, setTexte] = useState(valeurInitiale || '');
   const [majuscule, setMajuscule] = useState(false);
 
@@ -23,6 +23,8 @@ export default function ClavierVirtuel({ valeurInitiale, onValider, onFermer, ob
   return (
     <div className="clavier-fond" onClick={onFermer}>
       <div className="clavier-boite" onClick={(e) => e.stopPropagation()}>
+        {titre && <p className="clavier-titre">{titre}</p>}
+
         <textarea className="clavier-affichage" value={texte} readOnly rows={2} />
 
         <div className="clavier-touches">

@@ -93,120 +93,47 @@ async function getProchainNumero(annee) {
 }
 
 // Création d'une demande
-async function creerDemande({
-  nomDemandeur,
-  matriculeDemandeur,
-  zone,
-  categorie,
-  urgence,
-  description,
-}) {
+
+async function creerDemande({ nomDemandeur, matriculeDemandeur, zone, categorie, urgence, description }) {
   const pool = await getPool();
-
   const idService = await getOuCreerServiceBatimentSocial();
-
   const annee = new Date().getFullYear();
   const numero = await getProchainNumero(annee);
-
   const guid = Math.random().toString(16).slice(2, 10);
 
-  const oggetto = `${zone || "Non precise"} - ${urgence || "Normal"}`;
+  const oggetto = `${zone || 'Non precise'} — ${urgence || 'Normal'}`;
+  const descrittivo = `[Matricule: ${matriculeDemandeur || ''}] ${description || 'Aucune description'}`;
 
-  const descrittivo = `[Matricule: ${matriculeDemandeur || ""}] ${
-    description || "Aucune description"
-  }`;
+  const resultat = await pool
+    .request()
+    .input('NumDomanda', sql.Int, numero)
+    .input('AnnoDomanda', sql.Int, annee)
+    .input('GuidDomanda', sql.NVarChar(16), guid)
+    .input('IdService', sql.Int, idService)
+    .input('Richiedente', sql.NVarChar(400), nomDemandeur)
+    .input('Mail', sql.NVarChar(400), 'noreply@rivagroup.com')
+    .input('Oggetto', sql.NVarChar(sql.MAX), oggetto)
+    .input('Descrittivo', sql.NVarChar(sql.MAX), descrittivo)
+    .query(`
+      INSERT INTO T_BT_DEMANDES
+        (NumDomanda, AnnoDomanda, GuidDomanda, DataDomanda, IdService, Richiedente, Mail, Oggetto, Descrittivo, DataDesiderata, InsertData, Validata)
+      OUTPUT INSERTED.IdDomanda
+      VALUES
+        (@NumDomanda, @AnnoDomanda, @GuidDomanda, GETDATE(), @IdService, @Richiedente, @Mail, @Oggetto, @Descrittivo, GETDATE(), GETDATE(), 0)
+    `);
 
-  console.log("Valeurs a inserer :", {
-    numero,
-    annee,
-    guid,
-    idService,
-    nomDemandeur,
-    oggetto,
-    descrittivo,
-  });
+  const idDomanda = resultat.recordset[0].IdDomanda;
 
-  let idDomanda;
-
-  try {
-    const resultat = await pool
-      .request()
-      .input("NumDomanda", sql.Int, numero)
-      .input("AnnoDomanda", sql.Int, annee)
-      .input("GuidDomanda", sql.NVarChar(16), guid)
-      .input("IdService", sql.Int, idService)
-      .input("Richiedente", sql.NVarChar(400), nomDemandeur)
-      .input("Oggetto", sql.NVarChar(sql.MAX), oggetto)
-      .input("Descrittivo", sql.NVarChar(sql.MAX), descrittivo).query(`
-        INSERT INTO T_BT_DEMANDES
-          (
-            NumDomanda,
-            AnnoDomanda,
-            GuidDomanda,
-            DataDomanda,
-            IdService,
-            Richiedente,
-            Oggetto,
-            Descrittivo,
-            InsertData,
-            Validata
-          )
-        OUTPUT INSERTED.IdDomanda
-        VALUES
-          (
-            @NumDomanda,
-            @AnnoDomanda,
-            @GuidDomanda,
-            GETDATE(),
-            @IdService,
-            @Richiedente,
-            @Oggetto,
-            @Descrittivo,
-            GETDATE(),
-            0
-          )
-      `);
-
-    idDomanda = resultat.recordset[0].IdDomanda;
-
-    console.log("INSERT T_BT_DEMANDES reussi, IdDomanda =", idDomanda);
-  } catch (err) {
-    console.error("ECHEC sur INSERT T_BT_DEMANDES :", err.message);
-    throw err;
+  const idCategorie = await getIdCategorie(categorie);
+  if (idCategorie) {
+    await pool.request()
+      .input('guid', sql.NVarChar(16), guid)
+      .input('idCategorie', sql.Int, idCategorie)
+      .query(`INSERT INTO T_BT_GUID_CATEGORIE (GuidDomanda, IdCategoria) VALUES (@guid, @idCategorie)`);
   }
 
-  try {
-    const idCategorie = await getIdCategorie(categorie);
-
-    console.log("idCategorie trouve :", idCategorie);
-
-    if (idCategorie) {
-      await pool
-        .request()
-        .input("guid", sql.NVarChar(16), guid)
-        .input("idCategorie", sql.Int, idCategorie).query(`
-          INSERT INTO T_BT_GUID_CATEGORIE
-            (GuidDomanda, IdCategoria)
-          VALUES
-            (@guid, @idCategorie)
-        `);
-
-      console.log("INSERT T_BT_GUID_CATEGORIE reussi");
-    }
-  } catch (err) {
-    console.error("ECHEC sur INSERT T_BT_GUID_CATEGORIE :", err.message);
-
-    // Ne bloque pas le signalement
-  }
-
-  return {
-    idDomanda,
-    numero,
-    annee,
-    guid,
-  };
+  return { idDomanda, numero, annee, guid };
 }
-
 // Liste des demandes
 async function listerDemandes({ matricule, tousLesUtilisateurs, dateDebut, dateFin }) {
   const pool = await getPool();
@@ -235,7 +162,7 @@ async function listerDemandes({ matricule, tousLesUtilisateurs, dateDebut, dateF
     request.input('dateFin', sql.DateTime, new Date(dateFin + 'T23:59:59'));
   }
 
-  requete += ` ORDER BY d.IdDomanda DESC`;
+    requete += ` ORDER BY d.AnnoDomanda DESC, d.NumDomanda DESC`;
   const r = await request.query(requete);
   return r.recordset;
 }
@@ -243,22 +170,26 @@ async function supprimerDemande(idDomanda, matricule, estAdmin) {
   const pool = await getPool();
   const idService = await getOuCreerServiceBatimentSocial();
 
-  // Verifie que la demande appartient bien a notre service ET (est admin OU c'est sa propre demande)
   const demande = await pool.request()
     .input('id', sql.Int, idDomanda)
     .input('idService', sql.Int, idService)
-    .query(`SELECT GuidDomanda, Descrittivo FROM T_BT_DEMANDES WHERE IdDomanda = @id AND IdService = @idService`);
+    .query(`SELECT GuidDomanda, Descrittivo, Validata FROM T_BT_DEMANDES WHERE IdDomanda = @id AND IdService = @idService`);
 
   if (demande.recordset.length === 0) {
     throw new Error('Demande introuvable ou hors service Batiment Social');
   }
 
-  const { GuidDomanda, Descrittivo } = demande.recordset[0];
-  const estProprietaire = (Descrittivo || '').includes(`[Matricule: ${matricule}]`);
+  const { GuidDomanda, Descrittivo, Validata } = demande.recordset[0];
 
+  if (Validata) {
+    throw new Error('Cette demande est déjà validée et ne peut plus être supprimée depuis le totem');
+  }
+
+  const estProprietaire = (Descrittivo || '').includes(`[Matricule: ${matricule}]`);
   if (!estAdmin && !estProprietaire) {
     throw new Error('Non autorise a supprimer cette demande');
   }
+  // ... reste de la fonction inchangé (suppression des liaisons + DELETE)
 
   // Supprime d'abord les liaisons (categorie, pilote) pour eviter les orphelins
   await pool.request().input('guid', sql.NVarChar, GuidDomanda)
@@ -281,15 +212,19 @@ async function modifierDemande(idDomanda, matricule, estAdmin, { description }) 
   const demande = await pool.request()
     .input('id', sql.Int, idDomanda)
     .input('idService', sql.Int, idService)
-    .query(`SELECT Descrittivo FROM T_BT_DEMANDES WHERE IdDomanda = @id AND IdService = @idService`);
+    .query(`SELECT Descrittivo, Validata FROM T_BT_DEMANDES WHERE IdDomanda = @id AND IdService = @idService`);
 
   if (demande.recordset.length === 0) {
     throw new Error('Demande introuvable ou hors service Batiment Social');
   }
 
-  const descrittivoActuel = demande.recordset[0].Descrittivo || '';
-  const estProprietaire = descrittivoActuel.includes(`[Matricule: ${matricule}]`);
+  const { Descrittivo: descrittivoActuel, Validata } = demande.recordset[0];
 
+  if (Validata) {
+    throw new Error('Cette demande est déjà validée et ne peut plus être modifiée depuis le totem');
+  }
+
+  const estProprietaire = (descrittivoActuel || '').includes(`[Matricule: ${matricule}]`);
   if (!estAdmin && !estProprietaire) {
     throw new Error('Non autorise a modifier cette demande');
   }
